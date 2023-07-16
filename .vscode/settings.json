@@ -6,4 +6,5 @@
   "files.watcherExclude": {
     "**/.fvm": true
   },
+  "editor.formatOnSave": true,
 }
