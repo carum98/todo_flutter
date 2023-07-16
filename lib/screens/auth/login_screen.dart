@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/repository/auth_repository.dart';
 import 'package:todo_flutter/router/router_name.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -6,6 +7,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final repo = AuthRepository();
+
     final formKey = GlobalKey<FormState>();
 
     String username = '';
@@ -30,14 +33,13 @@ class LoginScreen extends StatelessWidget {
                     onSaved: (value) => password = value!,
                   ),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (formKey.currentState!.validate()) {
                         formKey.currentState!.save();
 
-                        print('username: $username');
-                        print('password: $password');
+                        final token = await repo.login(username, password);
 
-                        Navigator.pushNamed(context, HOME_PAGE);
+                        print('token: $token');
                       }
                     },
                     child: const Text('Login'),
