@@ -39,7 +39,13 @@ class LoginScreen extends StatelessWidget {
 
                         final token = await repo.login(username, password);
 
-                        print('token: $token');
+                        if (token != null && context.mounted) {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            HOME_PAGE,
+                            (route) => false,
+                          );
+                        }
                       }
                     },
                     child: const Text('Login'),
