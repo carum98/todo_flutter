@@ -1,11 +1,11 @@
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  Future<http.Response> login(String email, String password) async {
+  Future<http.Response> login(String username, String password) async {
     final response = await http.post(
       Uri.parse('http://192.168.10.179:8080/login'),
       body: {
-        'user_name': email,
+        'user_name': username,
         'password': password,
       },
     );
@@ -14,12 +14,12 @@ class AuthService {
   }
 
   Future<http.Response> register(
-      String name, String email, String password) async {
+      String name, String username, String password) async {
     final response = await http.post(
       Uri.parse('http://192.168.10.179:8080/register'),
       body: {
         'name': name,
-        'email': email,
+        'user_name': username,
         'password': password,
       },
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/router/router_name.dart';
-import 'package:todo_flutter/services/storage_service.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            StorageService().delete('token');
+            DI.of(context).authRepository.logout();
 
             Navigator.pushNamedAndRemoveUntil(
               context,

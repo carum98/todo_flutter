@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/core/dependency_injector.dart';
+import 'package:todo_flutter/repository/auth_repository.dart';
 import 'package:todo_flutter/router/router_generator.dart';
 import 'package:todo_flutter/router/router_name.dart';
 import 'package:todo_flutter/services/storage_service.dart';
@@ -6,8 +8,11 @@ import 'package:todo_flutter/services/storage_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final isAuth = await StorageService().containsKey('token');
-  runApp(MyApp(isAuth: isAuth));
+  final isAuth = await StorageService().containsKey(AuthRepository.storageName);
+
+  runApp(DI(
+    child: MyApp(isAuth: isAuth),
+  ));
 }
 
 class MyApp extends StatelessWidget {

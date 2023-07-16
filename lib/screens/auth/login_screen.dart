@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_flutter/repository/auth_repository.dart';
+import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/router/router_name.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -7,7 +7,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final repo = AuthRepository();
+    final repo = DI.of(context).authRepository;
 
     final formKey = GlobalKey<FormState>();
 
@@ -37,9 +37,9 @@ class LoginScreen extends StatelessWidget {
                       if (formKey.currentState!.validate()) {
                         formKey.currentState!.save();
 
-                        final token = await repo.login(username, password);
+                        final isAuth = await repo.login(username, password);
 
-                        if (token != null && context.mounted) {
+                        if (isAuth && context.mounted) {
                           Navigator.pushNamedAndRemoveUntil(
                             context,
                             HOME_PAGE,
