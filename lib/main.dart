@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
-import 'package:todo_flutter/repository/auth_repository.dart';
 import 'package:todo_flutter/router/router_generator.dart';
 import 'package:todo_flutter/router/router_name.dart';
-import 'package:todo_flutter/services/storage_service.dart';
+
+import 'services/storage_service.dart';
+import 'services/token_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final isAuth = await StorageService().containsKey(AuthRepository.storageName);
+  final isAuth = await StorageService().containsKey(TokenService.storageName);
 
-  runApp(DI(
-    child: MyApp(isAuth: isAuth),
+  runApp(Builder(
+    builder: (context) => DI(
+      context: context,
+      child: MyApp(isAuth: isAuth),
+    ),
   ));
 }
 

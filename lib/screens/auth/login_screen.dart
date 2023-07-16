@@ -14,6 +14,22 @@ class LoginScreen extends StatelessWidget {
     String username = '';
     String password = '';
 
+    Future<void> send() async {
+      try {
+        await repo.login(username, password);
+
+        if (context.mounted) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            HOME_PAGE,
+            (route) => false,
+          );
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
+
     return Material(
       child: SafeArea(
         child: Column(
@@ -33,19 +49,10 @@ class LoginScreen extends StatelessWidget {
                     onSaved: (value) => password = value!,
                   ),
                   ElevatedButton(
-                    onPressed: () async {
+                    onPressed: () {
                       if (formKey.currentState!.validate()) {
                         formKey.currentState!.save();
-
-                        final isAuth = await repo.login(username, password);
-
-                        if (isAuth && context.mounted) {
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            HOME_PAGE,
-                            (route) => false,
-                          );
-                        }
+                        send();
                       }
                     },
                     child: const Text('Login'),

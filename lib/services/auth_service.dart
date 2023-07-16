@@ -1,29 +1,30 @@
-import 'package:http/http.dart' as http;
+import 'package:todo_flutter/services/api_service.dart';
 
 class AuthService {
-  Future<http.Response> login(String username, String password) async {
-    final response = await http.post(
-      Uri.parse('http://192.168.10.179:8080/login'),
-      body: {
-        'user_name': username,
-        'password': password,
-      },
-    );
+  final ApiService _api;
 
-    return response;
+  AuthService({required ApiService api}) : _api = api;
+
+  Future<Map<String, dynamic>> login(String username, String password) async {
+    final response = await _api.post('/login', {
+      'user_name': username,
+      'password': password,
+    });
+
+    return response.data;
   }
 
-  Future<http.Response> register(
-      String name, String username, String password) async {
-    final response = await http.post(
-      Uri.parse('http://192.168.10.179:8080/register'),
-      body: {
-        'name': name,
-        'user_name': username,
-        'password': password,
-      },
-    );
+  Future<Map<String, dynamic>> register(
+    String name,
+    String username,
+    String password,
+  ) async {
+    final response = await _api.post('/register', {
+      'name': name,
+      'user_name': username,
+      'password': password,
+    });
 
-    return response;
+    return response.data;
   }
 }
