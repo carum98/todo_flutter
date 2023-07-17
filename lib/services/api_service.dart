@@ -91,7 +91,11 @@ class ApiService {
     if (response.statusCode == 401 && _context.mounted) {
       _tokenService.delete();
 
-      Navigator.of(_context).pushReplacementNamed(LOGIN_PAGE);
+      Navigator.pushNamedAndRemoveUntil(
+        _context,
+        LOGIN_PAGE,
+        (route) => false,
+      );
 
       throw UnauthorizedException(
         message: jsonDecode(response.body)['message'],

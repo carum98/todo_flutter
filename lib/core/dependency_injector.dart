@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:todo_flutter/repository/auth_repository.dart';
+import 'package:todo_flutter/repository/list_respository.dart';
 import 'package:todo_flutter/services/api_service.dart';
 import 'package:todo_flutter/services/auth_service.dart';
 import 'package:todo_flutter/services/list_service.dart';
@@ -11,10 +12,11 @@ class DI extends InheritedWidget {
 
   late final StorageService storage;
   late final AuthRepository authRepository;
-  late final ListService listService;
+  late final ListRepository listRepository;
 
   late final TokenService _tokenService;
   late final ApiService _apiService;
+  late final ListService _listService;
 
   DI({
     super.key,
@@ -30,13 +32,17 @@ class DI extends InheritedWidget {
       tokenService: _tokenService,
     );
 
+    _listService = ListService(
+      api: _apiService,
+    );
+
     authRepository = AuthRepository(
       tokenService: _tokenService,
       api: AuthService(api: _apiService.copyWith(useToken: false)),
     );
 
-    listService = ListService(
-      api: _apiService,
+    listRepository = ListRepository(
+      api: _listService,
     );
   }
 

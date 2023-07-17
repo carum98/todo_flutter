@@ -7,57 +7,58 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final repo = DI.of(context).listService;
+    final repo = DI.of(context).listRepository;
 
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('ToDo App'),
-          leading: Container(),
-          actions: [
-            IconButton(
-              onPressed: () {
-                DI.of(context).authRepository.logout();
+      appBar: AppBar(
+        title: const Text('ToDo App'),
+        leading: Container(),
+        actions: [
+          IconButton(
+            onPressed: () {
+              DI.of(context).authRepository.logout();
 
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  LOGIN_PAGE,
-                  (route) => false,
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                LOGIN_PAGE,
+                (route) => false,
+              );
+            },
+            icon: const Icon(Icons.logout),
+          ),
+        ],
+      ),
+      body: FutureBuilder(
+        future: repo.get(),
+        builder: (_, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (_, index) {
+                final item = snapshot.data![index];
+
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    leading: Icon(Icons.circle, color: item.color),
+                    title: Text(item.name),
+                    tileColor: item.color.withOpacity(0.2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                 );
               },
-              icon: const Icon(Icons.logout),
-            ),
-          ],
-        ),
-        body: FutureBuilder(
-          future: repo.getList(),
-          builder: (_, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (_, index) {
-                  final item = snapshot.data![index];
+            );
+          }
 
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                      leading: Icon(Icons.circle, color: item.color),
-                      title: Text(item.name),
-                      tileColor: item.color.withOpacity(0.2),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  );
-                },
-              );
-            }
-
-            return const Center(child: CircularProgressIndicator());
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.add),
-        ));
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 }
