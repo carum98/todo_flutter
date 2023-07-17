@@ -10,8 +10,6 @@ import 'package:todo_flutter/services/todo_service.dart';
 import 'package:todo_flutter/services/token_service.dart';
 
 class DI extends InheritedWidget {
-  final BuildContext context;
-
   late final StorageService storage;
   late final AuthRepository authRepository;
   late final ListRepository listRepository;
@@ -24,7 +22,6 @@ class DI extends InheritedWidget {
 
   DI({
     super.key,
-    required this.context,
     required super.child,
   }) {
     storage = StorageService();
@@ -32,7 +29,6 @@ class DI extends InheritedWidget {
     _tokenService = TokenService(storage: storage);
 
     _apiService = ApiService(
-      context: context,
       tokenService: _tokenService,
     );
 
@@ -61,6 +57,8 @@ class DI extends InheritedWidget {
   static DI of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<DI>() as DI;
   }
+
+  Stream<ApiServiceException> get onApiError => _apiService.onError;
 
   @override
   bool updateShouldNotify(DI oldWidget) => false;

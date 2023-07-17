@@ -1,8 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:todo_flutter/router/router_name.dart';
 import 'package:todo_flutter/services/token_service.dart';
 
 enum Method {
@@ -13,16 +12,17 @@ enum Method {
 }
 
 class ApiService {
-  final BuildContext _context;
   final TokenService _tokenService;
   final bool _useToken;
 
+  final StreamController<ApiServiceException> _onError =
+      StreamController<ApiServiceException>();
+  Stream<ApiServiceException> get onError => _onError.stream;
+
   ApiService({
-    required BuildContext context,
     required TokenService tokenService,
     bool? useToken,
-  })  : _context = context,
-        _tokenService = tokenService,
+  })  : _tokenService = tokenService,
         _useToken = useToken ?? true;
 
   Future<Response> get(String path) async {
@@ -60,55 +60,57 @@ class ApiService {
     required Method method,
     Map<String, dynamic>? data,
   }) async {
-    final headers = await _headers();
-    late final http.Response response;
+    try {
+      final headers = await _headers();
+      late final http.Response response;
 
-    switch (method) {
-      case Method.get:
-        response = await http.get(
-          _uri(path),
-          headers: headers,
+      switch (method) {
+        case Method.get:
+          response = await http.get(
+            _uri(path),
+            headers: headers,
+          );
+        case Method.post:
+          response = await http.post(
+            _uri(path),
+            headers: headers,
+            body: data,
+          );
+        case Method.put:
+          response = await http.put(
+            _uri(path),
+            headers: headers,
+            body: data,
+          );
+        case Method.delete:
+          response = await http.delete(
+            _uri(path),
+            headers: headers,
+          );
+      }
+
+      if (response.statusCode == 401) {
+        _tokenService.delete();
+
+        throw UnauthorizedException(
+          message: jsonDecode(response.body)['message'],
         );
-      case Method.post:
-        response = await http.post(
-          _uri(path),
-          headers: headers,
-          body: data,
+      }
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        throw ApiServiceException(
+          message: jsonDecode(response.body)['message'],
         );
-      case Method.put:
-        response = await http.put(
-          _uri(path),
-          headers: headers,
-          body: data,
-        );
-      case Method.delete:
-        response = await http.delete(
-          _uri(path),
-          headers: headers,
-        );
+      }
+
+      return Response(response);
+    } on ApiServiceException catch (e) {
+      _onError.add(e);
+
+      rethrow;
+    } catch (e) {
+      rethrow;
     }
-
-    if (response.statusCode == 401 && _context.mounted) {
-      _tokenService.delete();
-
-      Navigator.pushNamedAndRemoveUntil(
-        _context,
-        LOGIN_PAGE,
-        (route) => false,
-      );
-
-      throw UnauthorizedException(
-        message: jsonDecode(response.body)['message'],
-      );
-    }
-
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      throw ApiServiceException(
-        message: jsonDecode(response.body)['message'],
-      );
-    }
-
-    return Response(response);
   }
 
   Uri _uri(String path) {
@@ -135,7 +137,6 @@ class ApiService {
     bool? useToken,
   }) {
     return ApiService(
-      context: _context,
       tokenService: _tokenService,
       useToken: useToken ?? _useToken,
     );
@@ -156,6 +157,11 @@ class Response {
     } catch (e) {
       throw ApiServiceException(message: 'Invalid response body');
     }
+  }
+
+  @override
+  String toString() {
+    return 'Response{statusCode: $statusCode, data: $data}';
   }
 }
 

@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+import 'package:todo_flutter/router/router_name.dart';
 import 'package:todo_flutter/services/auth_service.dart';
 import 'package:todo_flutter/services/token_service.dart';
 
@@ -21,7 +23,13 @@ class AuthRepository {
     await _tokenService.save(response);
   }
 
-  Future<void> logout() async {
-    await _tokenService.delete();
+  void logout(BuildContext context) {
+    _tokenService.delete();
+
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      LOGIN_PAGE,
+      (route) => false,
+    );
   }
 }

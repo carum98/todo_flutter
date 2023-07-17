@@ -11,12 +11,7 @@ void main() async {
 
   final isAuth = await StorageService().containsKey(TokenService.storageName);
 
-  runApp(Builder(
-    builder: (context) => DI(
-      context: context,
-      child: MyApp(isAuth: isAuth),
-    ),
-  ));
+  runApp(DI(child: MyApp(isAuth: isAuth)));
 }
 
 class MyApp extends StatelessWidget {
