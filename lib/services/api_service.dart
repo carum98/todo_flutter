@@ -89,6 +89,8 @@ class ApiService {
     }
 
     if (response.statusCode == 401 && _context.mounted) {
+      _tokenService.delete();
+
       Navigator.of(_context).pushReplacementNamed(LOGIN_PAGE);
 
       throw UnauthorizedException(
@@ -123,6 +125,16 @@ class ApiService {
       'Authorization': 'Bearer ${authInfo?.token}',
       'Content-Type': 'application/json',
     };
+  }
+
+  ApiService copyWith({
+    bool? useToken,
+  }) {
+    return ApiService(
+      context: _context,
+      tokenService: _tokenService,
+      useToken: useToken ?? _useToken,
+    );
   }
 }
 

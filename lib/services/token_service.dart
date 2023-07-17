@@ -22,7 +22,7 @@ class TokenService {
   }
 
   Future<void> save(Map<String, dynamic> map) {
-    return _storage.write(storageName, Auth.fromJson(map).toJson().toString());
+    return _storage.write(storageName, jsonEncode(Auth.fromJson(map).toJson()));
   }
 
   Future<void> delete() {

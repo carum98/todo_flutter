@@ -7,25 +7,57 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home Page'),
-        leading: Container(),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            DI.of(context).authRepository.logout();
+    final repo = DI.of(context).listService;
 
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              LOGIN_PAGE,
-              (route) => false,
-            );
-          },
-          child: const Text('Logout'),
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('ToDo App'),
+          leading: Container(),
+          actions: [
+            IconButton(
+              onPressed: () {
+                DI.of(context).authRepository.logout();
+
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  LOGIN_PAGE,
+                  (route) => false,
+                );
+              },
+              icon: const Icon(Icons.logout),
+            ),
+          ],
         ),
-      ),
-    );
+        body: FutureBuilder(
+          future: repo.getList(),
+          builder: (_, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (_, index) {
+                  final item = snapshot.data![index];
+
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                      leading: Icon(Icons.circle, color: item.color),
+                      title: Text(item.name),
+                      tileColor: item.color.withOpacity(0.2),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  );
+                },
+              );
+            }
+
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(Icons.add),
+        ));
   }
 }
