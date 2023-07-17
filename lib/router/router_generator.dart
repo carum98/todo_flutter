@@ -12,6 +12,9 @@ class RouterGenerator {
         return MaterialPageRoute(builder: (_) => const LoginScreen());
       case REGISTER_PAGE:
         return MaterialPageRoute(builder: (_) => const RegisterScreen());
+      case TODO_PAGE:
+        final listId = settings.arguments as int;
+        return MaterialPageRoute(builder: (_) => TodoScreen(listId: listId));
       default:
         return MaterialPageRoute(builder: (_) => const NotFoundScreen());
     }

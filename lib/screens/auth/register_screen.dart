@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/router/router_name.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -6,11 +7,25 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final repo = DI.of(context).authRepository;
+
     final formKey = GlobalKey<FormState>();
 
     String name = '';
     String username = '';
     String password = '';
+
+    Future<void> send() async {
+      await repo.register(name, username, password);
+
+      if (context.mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          HOME_PAGE,
+          (route) => false,
+        );
+      }
+    }
 
     return Material(
       child: SafeArea(
@@ -38,12 +53,7 @@ class RegisterScreen extends StatelessWidget {
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
                         formKey.currentState!.save();
-
-                        print('username: $username');
-                        print('password: $password');
-                        print('name: $name');
-
-                        Navigator.pushNamed(context, HOME_PAGE);
+                        send();
                       }
                     },
                     child: const Text('Register'),

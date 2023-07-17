@@ -15,18 +15,14 @@ class LoginScreen extends StatelessWidget {
     String password = '';
 
     Future<void> send() async {
-      try {
-        await repo.login(username, password);
+      await repo.login(username, password);
 
-        if (context.mounted) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            HOME_PAGE,
-            (route) => false,
-          );
-        }
-      } catch (e) {
-        print(e);
+      if (context.mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          HOME_PAGE,
+          (route) => false,
+        );
       }
     }
 

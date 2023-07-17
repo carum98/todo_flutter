@@ -1,10 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:todo_flutter/repository/auth_repository.dart';
 import 'package:todo_flutter/repository/list_respository.dart';
+import 'package:todo_flutter/repository/todo_repository.dart';
 import 'package:todo_flutter/services/api_service.dart';
 import 'package:todo_flutter/services/auth_service.dart';
 import 'package:todo_flutter/services/list_service.dart';
 import 'package:todo_flutter/services/storage_service.dart';
+import 'package:todo_flutter/services/todo_service.dart';
 import 'package:todo_flutter/services/token_service.dart';
 
 class DI extends InheritedWidget {
@@ -13,10 +15,12 @@ class DI extends InheritedWidget {
   late final StorageService storage;
   late final AuthRepository authRepository;
   late final ListRepository listRepository;
+  late final TodoRepository todoRepository;
 
   late final TokenService _tokenService;
   late final ApiService _apiService;
   late final ListService _listService;
+  late final TodoService _todoService;
 
   DI({
     super.key,
@@ -36,6 +40,10 @@ class DI extends InheritedWidget {
       api: _apiService,
     );
 
+    _todoService = TodoService(
+      api: _apiService,
+    );
+
     authRepository = AuthRepository(
       tokenService: _tokenService,
       api: AuthService(api: _apiService.copyWith(useToken: false)),
@@ -43,6 +51,10 @@ class DI extends InheritedWidget {
 
     listRepository = ListRepository(
       api: _listService,
+    );
+
+    todoRepository = TodoRepository(
+      api: _todoService,
     );
   }
 

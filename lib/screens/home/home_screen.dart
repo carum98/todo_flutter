@@ -41,11 +41,21 @@ class HomeScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: ListTile(
                     leading: Icon(Icons.circle, color: item.color),
-                    title: Text(item.name),
-                    tileColor: item.color.withOpacity(0.2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                    title: Text(
+                      item.name,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
+                    tileColor: Theme.of(context).colorScheme.surfaceVariant,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        TODO_PAGE,
+                        arguments: item.id,
+                      );
+                    },
                   ),
                 );
               },

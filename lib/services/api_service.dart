@@ -32,7 +32,7 @@ class ApiService {
     );
   }
 
-  Future<Response> post(String path, Map<String, dynamic> data) async {
+  Future<Response> post(String path, Map<String, dynamic>? data) async {
     return await _request(
       path: path,
       method: Method.post,
