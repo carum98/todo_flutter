@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/router/router_name.dart';
 
+import 'widgets/auth_scaffold.dart';
+
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
 
@@ -9,14 +11,12 @@ class RegisterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final repo = DI.of(context).authRepository;
 
-    final formKey = GlobalKey<FormState>();
-
-    String name = '';
-    String username = '';
-    String password = '';
+    final name = ValueNotifier('');
+    final username = ValueNotifier('');
+    final password = ValueNotifier('');
 
     Future<void> send() async {
-      await repo.register(name, username, password);
+      await repo.register(name.value, username.value, password.value);
 
       if (context.mounted) {
         Navigator.pushNamedAndRemoveUntil(
@@ -27,49 +27,26 @@ class RegisterScreen extends StatelessWidget {
       }
     }
 
-    return Material(
-      child: SafeArea(
-        child: Column(
-          children: [
-            const Text('Register Page'),
-            Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    decoration: const InputDecoration(labelText: 'Name'),
-                    onSaved: (value) => name = value!,
-                  ),
-                  TextFormField(
-                    decoration: const InputDecoration(labelText: 'Username'),
-                    onSaved: (value) => username = value!,
-                  ),
-                  TextFormField(
-                    decoration: const InputDecoration(labelText: 'Password'),
-                    obscureText: true,
-                    onSaved: (value) => password = value!,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        formKey.currentState!.save();
-                        send();
-                      }
-                    },
-                    child: const Text('Register'),
-                  ),
-                ],
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, LOGIN_PAGE);
-              },
-              child: const Text('Login'),
-            ),
-          ],
+    return AuthScaffold(
+      title: 'Register',
+      values: [name, username, password],
+      onSend: send,
+      redirect: (label: 'Login', routeName: LOGIN_PAGE),
+      children: [
+        TextFormField(
+          decoration: const InputDecoration(hintText: 'Name'),
+          onChanged: (value) => name.value = value,
         ),
-      ),
+        TextFormField(
+          decoration: const InputDecoration(hintText: 'Username'),
+          onChanged: (value) => username.value = value,
+        ),
+        TextFormField(
+          decoration: const InputDecoration(hintText: 'Password'),
+          obscureText: true,
+          onChanged: (value) => password.value = value,
+        ),
+      ],
     );
   }
 }
