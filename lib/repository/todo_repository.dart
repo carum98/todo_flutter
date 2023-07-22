@@ -19,4 +19,8 @@ class TodoRepository {
 
     return TodoModel.fromJson(response);
   }
+
+  Future<void> move(int id, int position) async {
+    await _api.move(id, position);
+  }
 }

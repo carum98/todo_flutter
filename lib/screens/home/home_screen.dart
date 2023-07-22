@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(event.toString()),
+              content: Text(event.message),
               backgroundColor: Colors.red,
             ),
           );

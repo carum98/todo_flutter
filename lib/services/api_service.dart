@@ -129,7 +129,7 @@ class ApiService {
 
     return {
       'Authorization': 'Bearer ${authInfo?.token}',
-      'Content-Type': 'application/json',
+      // 'Content-Type': 'application/json',
     };
   }
 

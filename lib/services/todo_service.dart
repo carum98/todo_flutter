@@ -16,4 +16,12 @@ class TodoService {
 
     return response.data;
   }
+
+  Future<Map<String, dynamic>> move(int id, int position) async {
+    final response = await _api.post('/todos/$id/move', {
+      'position': position.toString(),
+    });
+
+    return response.data;
+  }
 }
