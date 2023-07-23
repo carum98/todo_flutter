@@ -47,6 +47,7 @@ class _TodoScreenState extends State<TodoScreen> {
           );
         },
       ),
+      resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final item = await showDialog(

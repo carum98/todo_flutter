@@ -1,12 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/features/lists/lists_form.dart';
 import 'package:todo_flutter/features/lists/lists_tile.dart';
 import 'package:todo_flutter/models/list_model.dart';
-import 'package:todo_flutter/services/api_service.dart'
-    show UnauthorizedException;
 import 'package:todo_flutter/widgets/list_scaffold.dart';
 
 class ListsScreen extends StatefulWidget {
@@ -17,35 +13,6 @@ class ListsScreen extends StatefulWidget {
 }
 
 class _ListsScreenState extends State<ListsScreen> {
-  late final StreamSubscription _logger;
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _logger = DI.of(context).onApiError.listen((event) {
-        if (event.runtimeType == UnauthorizedException) {
-          logout();
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(event.message),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    _logger.cancel();
-  }
-
   void logout() {
     DI.of(context).authRepository.logout(context);
   }
@@ -57,6 +24,7 @@ class _ListsScreenState extends State<ListsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('ToDo App'),
+        leadingWidth: 0,
         leading: Container(),
         actions: [
           IconButton(
@@ -84,6 +52,7 @@ class _ListsScreenState extends State<ListsScreen> {
           return const Center(child: CircularProgressIndicator());
         },
       ),
+      resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final item = await showDialog(

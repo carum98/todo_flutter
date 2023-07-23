@@ -15,6 +15,8 @@ class DI extends InheritedWidget {
   late final ListRepository listRepository;
   late final TodoRepository todoRepository;
 
+  late final GlobalKey<NavigatorState> navigatorKey;
+
   late final TokenService _tokenService;
   late final ApiService _apiService;
   late final ListService _listService;
@@ -24,12 +26,15 @@ class DI extends InheritedWidget {
     super.key,
     required super.child,
   }) {
+    navigatorKey = GlobalKey<NavigatorState>();
+
     storage = StorageService();
 
     _tokenService = TokenService(storage: storage);
 
     _apiService = ApiService(
       tokenService: _tokenService,
+      navigatorKey: navigatorKey,
     );
 
     _listService = ListService(

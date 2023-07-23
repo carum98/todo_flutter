@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:todo_flutter/router/router_name.dart';
 import 'package:todo_flutter/services/token_service.dart';
 
 enum Method {
@@ -14,6 +16,7 @@ enum Method {
 class ApiService {
   final TokenService _tokenService;
   final bool _useToken;
+  final GlobalKey<NavigatorState> navigatorKey;
 
   final StreamController<ApiServiceException> _onError =
       StreamController<ApiServiceException>();
@@ -21,6 +24,7 @@ class ApiService {
 
   ApiService({
     required TokenService tokenService,
+    required this.navigatorKey,
     bool? useToken,
   })  : _tokenService = tokenService,
         _useToken = useToken ?? true;
@@ -92,6 +96,11 @@ class ApiService {
       if (response.statusCode == 401) {
         _tokenService.delete();
 
+        navigatorKey.currentState?.pushNamedAndRemoveUntil(
+          LOGIN_PAGE,
+          (route) => false,
+        );
+
         throw UnauthorizedException(
           message: jsonDecode(response.body)['message'],
         );
@@ -141,6 +150,7 @@ class ApiService {
     return ApiService(
       tokenService: _tokenService,
       useToken: useToken ?? _useToken,
+      navigatorKey: navigatorKey,
     );
   }
 }

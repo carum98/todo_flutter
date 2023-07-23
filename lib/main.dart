@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: isAuth ? HOME_PAGE : LOGIN_PAGE,
       onGenerateRoute: RouterGenerator.onGenerateRoute,
+      navigatorKey: DI.of(context).navigatorKey,
     );
   }
 }
