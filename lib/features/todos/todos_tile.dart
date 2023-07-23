@@ -23,7 +23,7 @@ class _ToDoTileState extends State<ToDoTile> {
 
   @override
   Widget build(BuildContext context) {
-    final color = isComplete ? Colors.grey[700] : Colors.white;
+    final color = isComplete ? Colors.grey[500] : null;
 
     return ListTile(
       leading: Icon(

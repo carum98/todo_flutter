@@ -47,7 +47,7 @@ class FormScaffold extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: ValueListenableBuilder(
               valueListenable: isEnabled,
-              builder: (_, value, __) => ElevatedButton(
+              builder: (_, value, __) => FilledButton(
                 onPressed: value ? send : null,
                 child: Text(buttonTitle),
               ),

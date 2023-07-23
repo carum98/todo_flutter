@@ -6,7 +6,7 @@ import 'package:todo_flutter/widgets/form_scaffold.dart';
 
 class ListsForm extends StatelessWidget {
   final ListModel? item;
-  const ListsForm({this.item});
+  const ListsForm({super.key, this.item});
 
   @override
   Widget build(BuildContext context) {
