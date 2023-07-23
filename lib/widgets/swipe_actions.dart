@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class ActionsLists extends StatelessWidget {
+class SwipeActions extends StatelessWidget {
   final ValueKey<int> keyAction;
   final Widget child;
   final Function() onEdit;
   final Function() onDelete;
 
-  const ActionsLists({
+  const SwipeActions({
     super.key,
     required this.keyAction,
     required this.child,

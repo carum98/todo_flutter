@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:todo_flutter/models/list_model.dart';
 import 'package:todo_flutter/repository/list_respository.dart';
 import 'package:todo_flutter/router/router_name.dart';
+import 'package:todo_flutter/widgets/swipe_actions.dart';
 
 import 'form_lists.dart';
-import 'actions_lists.dart';
 
 class ListLists extends StatefulWidget {
   final ListRepository repo;
@@ -29,7 +29,7 @@ class _ListListsState extends State<ListLists> {
       itemBuilder: (_, index) {
         final item = widget.items[index];
 
-        return ActionsLists(
+        return SwipeActions(
           keyAction: ValueKey<int>(item.id),
           onDelete: () async {
             await widget.repo.delete(item.id);
