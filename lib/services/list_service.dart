@@ -5,8 +5,14 @@ class ListService {
 
   ListService({required ApiService api}) : _api = api;
 
-  Future<Map<String, dynamic>> getList() async {
+  Future<Map<String, dynamic>> getAll() async {
     final response = await _api.get('/lists');
+
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> get(int id) async {
+    final response = await _api.get('/lists/$id');
 
     return response.data;
   }

@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/models/todo_model.dart';
-import 'package:todo_flutter/repository/todo_repository.dart';
+import 'package:todo_flutter/widgets/form_scaffold.dart';
+import 'package:todo_flutter/widgets/list_scaffold.dart';
 
-class TodoScreen extends StatelessWidget {
+class TodoScreen extends StatefulWidget {
   final int listId;
-
   const TodoScreen({super.key, required this.listId});
 
+  @override
+  State<TodoScreen> createState() => _TodoScreenState();
+}
+
+class _TodoScreenState extends State<TodoScreen> {
   @override
   Widget build(BuildContext context) {
     final repo = DI.of(context).todoRepository;
@@ -17,12 +22,22 @@ class TodoScreen extends StatelessWidget {
         title: const Text('ToDos'),
       ),
       body: FutureBuilder(
-        future: repo.get(listId),
+        future: repo.getTodos(widget.listId),
         builder: (_, snapshot) {
           if (snapshot.hasData) {
-            return _List(
-              repo: repo,
+            return ListScaffold(
               items: snapshot.data as List<TodoModel>,
+              repository: repo,
+              reorderable: true,
+              formBuilder: (item) => _Form(
+                item: item,
+                listId: widget.listId,
+              ),
+              indentifierBuilder: (item) => item.id,
+              itemBuilder: (item, index) => ToDoTile(
+                item: item,
+                onTap: () => repo.toggle(item.id),
+              ),
             );
           }
 
@@ -32,58 +47,20 @@ class TodoScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          final item = await showDialog(
+            context: context,
+            builder: (_) => Dialog(
+              child: _Form(listId: widget.listId),
+            ),
+          );
+
+          if (item != null) {
+            setState(() {});
+          }
+        },
         child: const Icon(Icons.add),
       ),
-    );
-  }
-}
-
-class _List extends StatefulWidget {
-  final TodoRepository repo;
-  final List<TodoModel> items;
-
-  const _List({
-    required this.repo,
-    required this.items,
-  });
-
-  @override
-  State<_List> createState() => _ListState();
-}
-
-class _ListState extends State<_List> {
-  @override
-  Widget build(BuildContext context) {
-    return ReorderableListView.builder(
-      padding: const EdgeInsets.all(15),
-      itemCount: widget.items.length,
-      itemBuilder: (_, index) {
-        final item = widget.items[index];
-
-        return ToDoTile(
-          key: ValueKey(item.id),
-          item: item,
-          onTap: () => widget.repo.toggle(item.id),
-        );
-      },
-      onReorder: (int oldIndex, int newIndex) {
-        final index = newIndex > oldIndex ? newIndex - 1 : newIndex;
-
-        final item = widget.items[oldIndex];
-
-        setState(() {
-          widget.items.removeAt(oldIndex);
-          widget.items.insert(index, item);
-        });
-
-        widget.repo.move(item.id, newIndex).onError((error, stackTrace) {
-          setState(() {
-            widget.items.removeAt(index);
-            widget.items.insert(oldIndex, item);
-          });
-        });
-      },
     );
   }
 }
@@ -133,6 +110,50 @@ class _ToDoTileState extends State<ToDoTile> {
 
         widget.onTap?.call();
       },
+    );
+  }
+}
+
+class _Form extends StatelessWidget {
+  final TodoModel? item;
+  final int listId;
+  const _Form({this.item, required this.listId});
+
+  @override
+  Widget build(BuildContext context) {
+    final repo = DI.of(context).todoRepository;
+
+    final title = ValueNotifier(item?.title ?? '');
+
+    Future<void> send() async {
+      final titleValue = title.value.trim();
+
+      final data = (title: titleValue, listId: listId);
+
+      final value = item != null
+          ? await repo.update(item!.id, data)
+          : await repo.add(data);
+
+      if (context.mounted) {
+        Navigator.pop(context, value);
+      }
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: FormScaffold(
+        buttonTitle: item != null ? 'Update' : 'Create',
+        values: [title],
+        onSend: send,
+        children: [
+          TextFormField(
+            initialValue: title.value,
+            decoration: const InputDecoration(hintText: 'Title'),
+            autofocus: true,
+            onChanged: (value) => title.value = value,
+          ),
+        ],
+      ),
     );
   }
 }
