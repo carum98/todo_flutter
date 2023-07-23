@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
+import 'package:todo_flutter/features/todos/todos_form.dart';
+import 'package:todo_flutter/features/todos/todos_tile.dart';
 import 'package:todo_flutter/models/todo_model.dart';
-import 'package:todo_flutter/widgets/form_scaffold.dart';
 import 'package:todo_flutter/widgets/list_scaffold.dart';
 
 class TodoScreen extends StatefulWidget {
@@ -29,7 +30,7 @@ class _TodoScreenState extends State<TodoScreen> {
               items: snapshot.data as List<TodoModel>,
               repository: repo,
               reorderable: true,
-              formBuilder: (item) => _Form(
+              formBuilder: (item) => TodosForm(
                 item: item,
                 listId: widget.listId,
               ),
@@ -51,7 +52,7 @@ class _TodoScreenState extends State<TodoScreen> {
           final item = await showDialog(
             context: context,
             builder: (_) => Dialog(
-              child: _Form(listId: widget.listId),
+              child: TodosForm(listId: widget.listId),
             ),
           );
 
@@ -60,99 +61,6 @@ class _TodoScreenState extends State<TodoScreen> {
           }
         },
         child: const Icon(Icons.add),
-      ),
-    );
-  }
-}
-
-class ToDoTile extends StatefulWidget {
-  final TodoModel item;
-  final VoidCallback? onTap;
-
-  const ToDoTile({super.key, required this.item, this.onTap});
-
-  @override
-  State<ToDoTile> createState() => _ToDoTileState();
-}
-
-class _ToDoTileState extends State<ToDoTile> {
-  late bool isComplete;
-
-  @override
-  void initState() {
-    super.initState();
-
-    isComplete = widget.item.completed;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final color = isComplete ? Colors.grey[700] : Colors.white;
-
-    return ListTile(
-      leading: Icon(
-        isComplete
-            ? Icons.radio_button_checked_outlined
-            : Icons.radio_button_unchecked_outlined,
-        color: color,
-      ),
-      title: Text(
-        widget.item.title,
-        style: Theme.of(context).textTheme.titleLarge!.copyWith(color: color),
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      onTap: () {
-        setState(() {
-          isComplete = !isComplete;
-        });
-
-        widget.onTap?.call();
-      },
-    );
-  }
-}
-
-class _Form extends StatelessWidget {
-  final TodoModel? item;
-  final int listId;
-  const _Form({this.item, required this.listId});
-
-  @override
-  Widget build(BuildContext context) {
-    final repo = DI.of(context).todoRepository;
-
-    final title = ValueNotifier(item?.title ?? '');
-
-    Future<void> send() async {
-      final titleValue = title.value.trim();
-
-      final data = (title: titleValue, listId: listId);
-
-      final value = item != null
-          ? await repo.update(item!.id, data)
-          : await repo.add(data);
-
-      if (context.mounted) {
-        Navigator.pop(context, value);
-      }
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: FormScaffold(
-        buttonTitle: item != null ? 'Update' : 'Create',
-        values: [title],
-        onSend: send,
-        children: [
-          TextFormField(
-            initialValue: title.value,
-            decoration: const InputDecoration(hintText: 'Title'),
-            autofocus: true,
-            onChanged: (value) => title.value = value,
-          ),
-        ],
       ),
     );
   }

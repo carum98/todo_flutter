@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/router/router_name.dart';
 
-import 'widgets/auth_scaffold.dart';
+import '../../widgets/auth_scaffold.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
