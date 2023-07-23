@@ -7,7 +7,7 @@ class RouterGenerator {
   static Route onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case HOME_PAGE:
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
+        return MaterialPageRoute(builder: (_) => const ListsScreen());
       case LOGIN_PAGE:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
       case REGISTER_PAGE:

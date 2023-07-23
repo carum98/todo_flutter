@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/widgets/form_scaffold.dart';
 
 class AuthScaffold extends StatelessWidget {
   final String title;
@@ -18,26 +19,6 @@ class AuthScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-
-    final isEnabled = ValueNotifier(false);
-
-    void validate() {
-      isEnabled.value = values.every((element) => element.value.isNotEmpty);
-    }
-
-    for (var element in values) {
-      element.addListener(validate);
-    }
-
-    void send() {
-      if (!formKey.currentState!.validate()) {
-        return;
-      }
-
-      onSend();
-    }
-
     return Material(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -52,25 +33,11 @@ class AuthScaffold extends StatelessWidget {
           const SizedBox(height: 30),
           SizedBox(
             width: 300,
-            child: Form(
-              key: formKey,
-              child: Wrap(
-                runSpacing: 20,
-                children: [
-                  ...children,
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: ValueListenableBuilder(
-                      valueListenable: isEnabled,
-                      builder: (_, value, __) => ElevatedButton(
-                        onPressed: value ? send : null,
-                        child: Text(title),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            child: FormScaffold(
+              buttonTitle: title,
+              values: values,
+              onSend: onSend,
+              children: children,
             ),
           ),
           TextButton(

@@ -10,4 +10,26 @@ class ListService {
 
     return response.data;
   }
+
+  Future<Map<String, dynamic>> create(String name, String color) async {
+    final response = await _api.post('/lists', {
+      'name': name,
+      'color': color,
+    });
+
+    return response.data;
+  }
+
+  Future<void> delete(int id) async {
+    await _api.delete('/lists/$id');
+  }
+
+  Future<Map<String, dynamic>> update(int id, String name, String color) async {
+    final response = await _api.put('/lists/$id', {
+      'name': name,
+      'color': color,
+    });
+
+    return response.data;
+  }
 }

@@ -13,4 +13,20 @@ class ListRepository {
       response['data'].map((x) => ListModel.fromJson(x)),
     ).toList();
   }
+
+  Future<ListModel> create(String name, String color) async {
+    final response = await _api.create(name, color);
+
+    return ListModel.fromJson(response);
+  }
+
+  Future<void> delete(int id) async {
+    await _api.delete(id);
+  }
+
+  Future<ListModel> update(int id, String name, String color) async {
+    final response = await _api.update(id, name, color);
+
+    return ListModel.fromJson(response);
+  }
 }

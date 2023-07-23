@@ -97,7 +97,9 @@ class ApiService {
         );
       }
 
-      if (response.statusCode != 200 && response.statusCode != 201) {
+      if (response.statusCode != 200 &&
+          response.statusCode != 201 &&
+          response.statusCode != 204) {
         throw ApiServiceException(
           message: jsonDecode(response.body)['message'],
         );

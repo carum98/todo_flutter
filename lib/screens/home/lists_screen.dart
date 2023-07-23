@@ -2,18 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
-import 'package:todo_flutter/router/router_name.dart';
+import 'package:todo_flutter/models/list_model.dart';
+import 'package:todo_flutter/screens/lists/form_lists.dart';
+import 'package:todo_flutter/screens/lists/list_lists.dart';
 import 'package:todo_flutter/services/api_service.dart'
     show UnauthorizedException;
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class ListsScreen extends StatefulWidget {
+  const ListsScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<ListsScreen> createState() => _ListsScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _ListsScreenState extends State<ListsScreen> {
   late final StreamSubscription _logger;
 
   @override
@@ -66,33 +68,9 @@ class _HomeScreenState extends State<HomeScreen> {
         future: repo.get(),
         builder: (_, snapshot) {
           if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (_, index) {
-                final item = snapshot.data![index];
-
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(
-                    leading: Icon(Icons.circle, color: item.color),
-                    title: Text(
-                      item.name,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    tileColor: Theme.of(context).colorScheme.surfaceVariant,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        TODO_PAGE,
-                        arguments: item.id,
-                      );
-                    },
-                  ),
-                );
-              },
+            return ListLists(
+              repo: repo,
+              items: snapshot.data as List<ListModel>,
             );
           }
 
@@ -100,7 +78,18 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          final item = await showDialog(
+            context: context,
+            builder: (_) => const Dialog(
+              child: FormList(),
+            ),
+          );
+
+          if (item != null) {
+            setState(() {});
+          }
+        },
         child: const Icon(Icons.add),
       ),
     );
