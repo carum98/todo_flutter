@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_flutter/screens/screens.dart';
 
@@ -7,16 +10,34 @@ class RouterGenerator {
   static Route onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case HOME_PAGE:
-        return MaterialPageRoute(builder: (_) => const ListsScreen());
+        return pageRouter(
+          Platform.isMacOS ? const HomeScreen() : const ListsScreen(),
+        );
       case LOGIN_PAGE:
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
+        return pageRouter(
+          Platform.isMacOS
+              ? const LoginScreen()
+              : const Material(child: LoginScreen()),
+        );
       case REGISTER_PAGE:
-        return MaterialPageRoute(builder: (_) => const RegisterScreen());
+        return pageRouter(
+          Platform.isMacOS
+              ? const RegisterScreen()
+              : const Material(child: RegisterScreen()),
+        );
       case TODO_PAGE:
         final listId = settings.arguments as int;
-        return MaterialPageRoute(builder: (_) => TodoScreen(listId: listId));
+        return pageRouter(TodoScreen(listId: listId));
       default:
-        return MaterialPageRoute(builder: (_) => const NotFoundScreen());
+        return pageRouter(const NotFoundScreen());
     }
   }
+}
+
+pageRouter(Widget page) {
+  if (Platform.isMacOS || Platform.isIOS) {
+    return CupertinoPageRoute(builder: (_) => page);
+  }
+
+  return MaterialPageRoute(builder: (_) => page);
 }

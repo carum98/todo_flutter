@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:macos_ui/macos_ui.dart';
 
 class ThemeController {
   static const appColor = Color(0xFF0070F3);
@@ -15,7 +18,7 @@ class ThemeController {
     ),
   );
 
-  static final light = ThemeData(
+  static final _lightMaterial = ThemeData(
     colorScheme: ColorScheme.fromSeed(
       seedColor: appColor,
     ),
@@ -25,7 +28,7 @@ class ThemeController {
     useMaterial3: true,
   );
 
-  static final dark = ThemeData(
+  static final _darkMaterial = ThemeData(
     colorScheme: ColorScheme.fromSeed(
       seedColor: appColor,
       brightness: Brightness.dark,
@@ -35,4 +38,18 @@ class ThemeController {
     ),
     useMaterial3: true,
   );
+
+  static final _lightMacos = MacosThemeData(
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+    primaryColor: appColor,
+  );
+
+  static final _darkMacos = MacosThemeData(
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+    primaryColor: appColor,
+    brightness: Brightness.dark,
+  );
+
+  static final light = Platform.isMacOS ? _lightMacos : _lightMaterial;
+  static final dark = Platform.isMacOS ? _darkMacos : _darkMaterial;
 }

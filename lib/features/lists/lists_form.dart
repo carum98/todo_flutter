@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flex_color_picker/flex_color_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/models/list_model.dart';
 import 'package:todo_flutter/widgets/form_scaffold.dart';
+import 'package:todo_flutter/widgets/platform_form_field.dart';
 
 class ListsForm extends StatelessWidget {
   final ListModel? item;
@@ -37,9 +40,9 @@ class ListsForm extends StatelessWidget {
         values: [name],
         onSend: send,
         children: [
-          TextFormField(
+          PlatformFormField(
             initialValue: name.value,
-            decoration: const InputDecoration(hintText: 'Name'),
+            hintText: 'Name',
             autofocus: true,
             onChanged: (value) => name.value = value,
           ),
@@ -48,6 +51,8 @@ class ListsForm extends StatelessWidget {
             onColorChanged: (Color value) => color.value = value,
             enableShadesSelection: false,
             padding: EdgeInsets.zero,
+            width: Platform.isMacOS ? 20 : 40,
+            height: Platform.isMacOS ? 20 : 40,
             pickersEnabled: const <ColorPickerType, bool>{
               ColorPickerType.accent: false,
             },

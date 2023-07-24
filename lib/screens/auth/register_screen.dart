@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/router/router_name.dart';
-
-import '../../widgets/auth_scaffold.dart';
+import 'package:todo_flutter/widgets/auth_scaffold.dart';
+import 'package:todo_flutter/widgets/platform_form_field.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -33,16 +33,16 @@ class RegisterScreen extends StatelessWidget {
       onSend: send,
       redirect: (label: 'Login', routeName: LOGIN_PAGE),
       children: [
-        TextFormField(
-          decoration: const InputDecoration(hintText: 'Name'),
+        PlatformFormField(
+          hintText: 'Name',
           onChanged: (value) => name.value = value,
         ),
-        TextFormField(
-          decoration: const InputDecoration(hintText: 'Username'),
+        PlatformFormField(
+          hintText: 'Username',
           onChanged: (value) => username.value = value,
         ),
-        TextFormField(
-          decoration: const InputDecoration(hintText: 'Password'),
+        PlatformFormField(
+          hintText: 'Password',
           obscureText: true,
           onChanged: (value) => password.value = value,
         ),

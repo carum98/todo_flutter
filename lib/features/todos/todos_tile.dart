@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:macos_ui/macos_ui.dart';
 import 'package:todo_flutter/models/todo_model.dart';
 
 class ToDoTile extends StatefulWidget {
@@ -24,14 +27,36 @@ class _ToDoTileState extends State<ToDoTile> {
   @override
   Widget build(BuildContext context) {
     final color = isComplete ? Colors.grey[500] : null;
+    final icon =
+        isComplete ? Icons.radio_button_checked : Icons.radio_button_unchecked;
+
+    void onTap() {
+      setState(() {
+        isComplete = !isComplete;
+      });
+
+      widget.onTap?.call();
+    }
+
+    if (Platform.isMacOS) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: MacosListTile(
+          leading: Icon(icon, color: color),
+          title: Text(
+            widget.item.title,
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(color: color ?? Colors.white),
+          ),
+          onClick: onTap,
+        ),
+      );
+    }
 
     return ListTile(
-      leading: Icon(
-        isComplete
-            ? Icons.radio_button_checked_outlined
-            : Icons.radio_button_unchecked_outlined,
-        color: color,
-      ),
+      leading: Icon(icon, color: color),
       title: Text(
         widget.item.title,
         style: Theme.of(context).textTheme.titleLarge!.copyWith(color: color),
@@ -39,13 +64,7 @@ class _ToDoTileState extends State<ToDoTile> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      onTap: () {
-        setState(() {
-          isComplete = !isComplete;
-        });
-
-        widget.onTap?.call();
-      },
+      onTap: onTap,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/widgets/platform_button.dart';
 
 class FormScaffold extends StatelessWidget {
   final String buttonTitle;
@@ -47,9 +48,9 @@ class FormScaffold extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: ValueListenableBuilder(
               valueListenable: isEnabled,
-              builder: (_, value, __) => FilledButton(
+              builder: (_, value, __) => PlatformButton(
                 onPressed: value ? send : null,
-                child: Text(buttonTitle),
+                buttonTitle: buttonTitle,
               ),
             ),
           ),

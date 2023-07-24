@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/models/todo_model.dart';
 import 'package:todo_flutter/widgets/form_scaffold.dart';
+import 'package:todo_flutter/widgets/platform_form_field.dart';
 
 class TodosForm extends StatelessWidget {
   final TodoModel? item;
@@ -36,9 +37,9 @@ class TodosForm extends StatelessWidget {
         values: [title],
         onSend: send,
         children: [
-          TextFormField(
+          PlatformFormField(
             initialValue: title.value,
-            decoration: const InputDecoration(hintText: 'Title'),
+            hintText: 'Title',
             autofocus: true,
             onChanged: (value) => title.value = value,
           ),
