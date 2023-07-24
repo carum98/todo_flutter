@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
+import 'package:todo_flutter/core/platform.dart';
 
 class PlatformButton extends StatelessWidget {
   final void Function()? onPressed;

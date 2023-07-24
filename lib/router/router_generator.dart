@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/screens/screens.dart';
 
 import 'router_name.dart';

@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/router/router_generator.dart';
 import 'package:todo_flutter/router/router_name.dart';
 
+import 'core/platform.dart';
 import 'core/theme.dart';
 import 'services/storage_service.dart';
 import 'services/token_service.dart';

@@ -1,8 +1,7 @@
-import 'dart:io';
-
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
+import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/models/list_model.dart';
 import 'package:todo_flutter/widgets/form_scaffold.dart';
 import 'package:todo_flutter/widgets/platform_form_field.dart';
