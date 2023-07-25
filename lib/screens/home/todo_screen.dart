@@ -1,3 +1,4 @@
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
@@ -22,7 +23,7 @@ class _TodoScreenState extends State<TodoScreen> {
   Widget build(BuildContext context) {
     final repo = DI.of(context).todoRepository;
 
-    return ScaffoldPlatform(
+    return _ScaffoldPlatform(
       title: 'ToDos',
       onAdd: () async {
         final item = await platformShowDialog(
@@ -63,13 +64,12 @@ class _TodoScreenState extends State<TodoScreen> {
   }
 }
 
-class ScaffoldPlatform extends StatelessWidget {
+class _ScaffoldPlatform extends StatelessWidget {
   final String title;
   final Function() onAdd;
   final Widget body;
 
-  const ScaffoldPlatform({
-    super.key,
+  const _ScaffoldPlatform({
     required this.title,
     required this.onAdd,
     required this.body,
@@ -77,7 +77,35 @@ class ScaffoldPlatform extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isMacOS) {
+    if (Platform.isWindows) {
+      return NavigationView(
+        appBar: NavigationAppBar(
+          title: Text(title),
+        ),
+        content: ScaffoldPage.withPadding(
+          header: PageHeader(
+            title: Text(title),
+            commandBar: CommandBar(
+              mainAxisAlignment: MainAxisAlignment.end,
+              primaryItems: [
+                CommandBarButton(
+                  icon: const Icon(FluentIcons.add),
+                  label: const Text('New'),
+                  onPressed: onAdd,
+                ),
+              ],
+            ),
+          ),
+          content: Container(
+            decoration: BoxDecoration(
+              color: FluentThemeData.dark().scaffoldBackgroundColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: body,
+          ),
+        ),
+      );
+    } else if (Platform.isMacOS) {
       return MacosScaffold(
         toolBar: ToolBar(
           title: Text(title),

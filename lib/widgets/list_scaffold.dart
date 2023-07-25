@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_flutter/core/repository_interfaz.dart';
 
+import 'platform_show_dialog.dart';
 import 'swipe_actions.dart';
 
 class ListScaffold<T, D> extends StatefulWidget {
@@ -72,11 +73,9 @@ class _ListScaffoldState<T, D> extends State<ListScaffold<T, D>> {
   }
 
   Future<void> onEdit(T item, int index) async {
-    final data = await showDialog(
+    final data = await platformShowDialog(
       context: context,
-      builder: (_) => Dialog(
-        child: widget.formBuilder(item),
-      ),
+      builder: () => widget.formBuilder(item),
     );
 
     if (data == null) return;

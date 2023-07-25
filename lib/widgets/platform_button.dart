@@ -1,3 +1,4 @@
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:todo_flutter/core/platform.dart';
@@ -16,6 +17,13 @@ class PlatformButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Platform.isWindows) {
+      return fluent.FilledButton(
+        onPressed: onPressed,
+        child: Text(buttonTitle),
+      );
+    }
+
     if (Platform.isMacOS) {
       return PushButton(
         onPressed: onPressed,

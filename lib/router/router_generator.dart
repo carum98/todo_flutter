@@ -1,3 +1,4 @@
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_flutter/core/platform.dart';
@@ -10,7 +11,9 @@ class RouterGenerator {
     switch (settings.name) {
       case HOME_PAGE:
         return pageRouter(
-          Platform.isMacOS ? const HomeScreen() : const ListsScreen(),
+          Platform.isWindows || Platform.isMacOS
+              ? const HomeScreen()
+              : const ListsScreen(),
         );
       case LOGIN_PAGE:
         return pageRouter(
@@ -34,6 +37,10 @@ class RouterGenerator {
 }
 
 pageRouter(Widget page) {
+  if (Platform.isWindows) {
+    return FluentPageRoute(builder: (_) => page);
+  }
+
   if (Platform.isMacOS || Platform.isIOS) {
     return CupertinoPageRoute(builder: (_) => page);
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/models/todo_model.dart';
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
 
 class ToDoTile extends StatefulWidget {
   final TodoModel item;
@@ -35,6 +36,23 @@ class _ToDoTileState extends State<ToDoTile> {
       });
 
       widget.onTap?.call();
+    }
+
+    if (Platform.isWindows) {
+      return fluent.ListTile(
+        leading: Icon(icon, color: color),
+        title: Text(
+          widget.item.title,
+          style: fluent.FluentThemeData.dark()
+              .typography
+              .bodyLarge!
+              .copyWith(color: color),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        onPressed: onTap,
+      );
     }
 
     if (Platform.isMacOS) {

@@ -1,3 +1,4 @@
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:todo_flutter/core/platform.dart';
@@ -20,6 +21,16 @@ class PlatformFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Platform.isWindows) {
+      return TextFormBox(
+        initialValue: initialValue,
+        placeholder: hintText,
+        autofocus: autofocus,
+        onChanged: onChanged,
+        obscureText: obscureText,
+      );
+    }
+
     if (Platform.isMacOS) {
       return MacosTextField(
         placeholder: hintText,

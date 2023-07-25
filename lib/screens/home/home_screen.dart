@@ -1,15 +1,57 @@
+import 'package:fluent_ui/fluent_ui.dart' hide Colors;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
+import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/features/lists/lists_form.dart';
 import 'package:todo_flutter/models/list_model.dart';
 import 'package:todo_flutter/widgets/platform_show_dialog.dart';
 
+import 'lists_screen.dart';
 import 'todo_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    if (Platform.isWindows) {
+      return const _LayoutWindows();
+    } else {
+      return const _LayoutMacos();
+    }
+  }
+}
+
+class _LayoutWindows extends StatelessWidget {
+  const _LayoutWindows();
+
+  @override
+  Widget build(BuildContext context) {
+    return NavigationView(
+      appBar: const NavigationAppBar(
+        title: Text('ToDo App'),
+        automaticallyImplyLeading: false,
+      ),
+      pane: NavigationPane(
+        displayMode: PaneDisplayMode.minimal,
+        size: const NavigationPaneSize(openMaxWidth: 200),
+        selected: 0,
+        items: [
+          PaneItem(
+            icon: const Icon(FluentIcons.list),
+            title: const Text('Lists'),
+            body: const ListsScreen(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LayoutMacos extends StatelessWidget {
+  const _LayoutMacos();
 
   @override
   Widget build(BuildContext context) {
@@ -87,9 +129,7 @@ class __ListState extends State<_List> {
     return SidebarItems(
       currentIndex: index,
       onChanged: (v) {
-        setState(() {
-          index = v;
-        });
+        setState(() => index = v);
 
         widget.onTap(widget.items[v]);
       },

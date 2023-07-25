@@ -16,6 +16,7 @@ dependencies:
   flutter_secure_storage: ^8.0.0
   flex_color_picker: ^3.3.0
   macos_ui: ^2.0.0
+  fluent_ui: ^4.7.0
 
 dev_dependencies:
   flutter_test:
