@@ -3,6 +3,8 @@ import 'package:macos_ui/macos_ui.dart';
 import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/models/todo_model.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:yaru/yaru.dart';
+import 'package:yaru_widgets/widgets.dart';
 
 class ToDoTile extends StatefulWidget {
   final TodoModel item;
@@ -36,6 +38,19 @@ class _ToDoTileState extends State<ToDoTile> {
       });
 
       widget.onTap?.call();
+    }
+
+    if (Platform.isLinux) {
+      return GestureDetector(
+        onTap: onTap,
+        child: YaruTile(
+          leading: Icon(icon, color: color),
+          title: Text(
+            widget.item.title,
+            style: YaruTheme.of(context).theme!.primaryTextTheme.titleLarge,
+          ),
+        ),
+      );
     }
 
     if (Platform.isWindows) {

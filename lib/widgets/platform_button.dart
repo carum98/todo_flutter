@@ -17,6 +17,18 @@ class PlatformButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Platform.isLinux) {
+      return textButton
+          ? TextButton(
+              onPressed: onPressed,
+              child: Text(buttonTitle),
+            )
+          : ElevatedButton(
+              onPressed: onPressed,
+              child: Text(buttonTitle),
+            );
+    }
+
     if (Platform.isWindows) {
       return fluent.FilledButton(
         onPressed: onPressed,

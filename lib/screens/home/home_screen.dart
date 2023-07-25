@@ -7,6 +7,7 @@ import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/features/lists/lists_form.dart';
 import 'package:todo_flutter/models/list_model.dart';
 import 'package:todo_flutter/widgets/platform_show_dialog.dart';
+import 'package:yaru_widgets/widgets.dart';
 
 import 'lists_screen.dart';
 import 'todo_screen.dart';
@@ -16,11 +17,67 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isWindows) {
+    if (Platform.isLinux) {
+      return const _LayoutLinux();
+    } else if (Platform.isWindows) {
       return const _LayoutWindows();
     } else {
       return const _LayoutMacos();
     }
+  }
+}
+
+class _LayoutLinux extends StatelessWidget {
+  const _LayoutLinux();
+
+  @override
+  Widget build(BuildContext context) {
+    final repo = DI.of(context).listRepository;
+
+    return Scaffold(
+      body: FutureBuilder(
+        future: repo.getAll(),
+        builder: (_, snapshot) {
+          return YaruMasterDetailPage(
+            length: snapshot.data?.length ?? 0,
+            appBar: const YaruWindowTitleBar(
+              title: Text('ToDo App'),
+            ),
+            tileBuilder: (_, index, selected, __) {
+              final list = snapshot.data?[index] as ListModel;
+
+              return YaruMasterTile(
+                leading: MacosIcon(
+                  Icons.circle,
+                  color: list.color,
+                ),
+                title: Text(list.name),
+                selected: selected,
+              );
+            },
+            bottomBar: TextButton.icon(
+              onPressed: () async {
+                final item = await platformShowDialog(
+                  context: context,
+                  builder: () => const ListsForm(),
+                );
+
+                if (item != null) {
+                  print(item);
+                }
+              },
+              icon: const Icon(Icons.add),
+              label: const Text('Add List'),
+            ),
+            pageBuilder: (_, index) {
+              return TodoScreen(
+                listId: snapshot.data![index].id,
+              );
+            },
+          );
+        },
+      ),
+    );
   }
 }
 

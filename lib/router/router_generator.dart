@@ -11,7 +11,7 @@ class RouterGenerator {
     switch (settings.name) {
       case HOME_PAGE:
         return pageRouter(
-          Platform.isWindows || Platform.isMacOS
+          Platform.isLinux || Platform.isWindows || Platform.isMacOS
               ? const HomeScreen()
               : const ListsScreen(),
         );

@@ -9,6 +9,7 @@ import 'package:todo_flutter/features/todos/todos_tile.dart';
 import 'package:todo_flutter/models/todo_model.dart';
 import 'package:todo_flutter/widgets/list_scaffold.dart';
 import 'package:todo_flutter/widgets/platform_show_dialog.dart';
+import 'package:yaru_widgets/widgets.dart';
 
 class TodoScreen extends StatefulWidget {
   final int listId;
@@ -77,7 +78,18 @@ class _ScaffoldPlatform extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isWindows) {
+    if (Platform.isLinux) {
+      return YaruDetailPage(
+        appBar: YaruWindowTitleBar(
+          title: Text(title),
+        ),
+        body: body,
+        floatingActionButton: FloatingActionButton(
+          onPressed: onAdd,
+          child: const Icon(Icons.add),
+        ),
+      );
+    } else if (Platform.isWindows) {
       return NavigationView(
         appBar: NavigationAppBar(
           title: Text(title),

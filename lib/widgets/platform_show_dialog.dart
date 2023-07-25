@@ -9,6 +9,21 @@ Future<T?> platformShowDialog<T>({
   required BuildContext context,
   required Widget Function() builder,
 }) async {
+  if (Platform.isLinux) {
+    return await showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            minWidth: 400,
+            maxWidth: 400,
+          ),
+          child: builder(),
+        ),
+      ),
+    );
+  }
+
   if (Platform.isWindows) {
     return await fluent.showDialog(
       context: context,
