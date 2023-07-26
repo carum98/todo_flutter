@@ -1,3 +1,4 @@
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:todo_flutter/core/platform.dart';
@@ -49,6 +50,36 @@ class ThemeController {
     brightness: Brightness.dark,
   );
 
-  static final light = Platform.isMacOS ? _lightMacos : _lightMaterial;
-  static final dark = Platform.isMacOS ? _darkMacos : _darkMaterial;
+  static final _buttonStyleWindows = fluent.ButtonThemeData(
+    filledButtonStyle: fluent.ButtonStyle(
+      padding: fluent.ButtonState.all(
+        const EdgeInsets.symmetric(
+          vertical: 10,
+        ),
+      ),
+    ),
+  );
+
+  static final _lightWindows = fluent.FluentThemeData(
+    brightness: Brightness.light,
+    accentColor: fluent.AccentColor('normal', appColor.toAccentColor().swatch),
+    buttonTheme: _buttonStyleWindows,
+  );
+
+  static final _darkWindows = fluent.FluentThemeData(
+    brightness: Brightness.dark,
+    accentColor: fluent.AccentColor('normal', appColor.toAccentColor().swatch),
+    buttonTheme: _buttonStyleWindows,
+  );
+
+  static final light = Platform.isWindows
+      ? _lightWindows
+      : Platform.isMacOS
+          ? _lightMacos
+          : _lightMaterial;
+  static final dark = Platform.isWindows
+      ? _darkWindows
+      : Platform.isMacOS
+          ? _darkMacos
+          : _darkMaterial;
 }

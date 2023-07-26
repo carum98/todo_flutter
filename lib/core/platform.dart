@@ -11,4 +11,7 @@ class Platform {
   static final isAndroid = !Platform.isWeb && io.Platform.isAndroid;
   static final isIOS = !Platform.isWeb && io.Platform.isIOS;
   static final isFuchsia = !Platform.isWeb && io.Platform.isFuchsia;
+
+  static final isMobile = isAndroid || isIOS;
+  static final isDesktop = isMacOS || isWindows || isLinux;
 }

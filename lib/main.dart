@@ -17,7 +17,7 @@ void main() async {
     await YaruWindowTitleBar.ensureInitialized();
   }
 
-  if (Platform.isMacOS) {
+  if (Platform.isWindows) {
     await _configureMacosWindowUtils();
   }
 
@@ -37,6 +37,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     if (Platform.isLinux) {
       return YaruTheme(
+        data: const YaruThemeData(
+          useMaterial3: true,
+          variant: YaruVariant.blue,
+        ),
         builder: (context, yaru, _) {
           return MaterialApp(
             title: 'ToDo App',
@@ -54,8 +58,8 @@ class MyApp extends StatelessWidget {
     if (Platform.isWindows) {
       return FluentApp(
         title: 'ToDo App',
-        theme: FluentThemeData.light(),
-        darkTheme: FluentThemeData.dark(),
+        theme: ThemeController.light as FluentThemeData,
+        darkTheme: ThemeController.dark as FluentThemeData,
         initialRoute: isAuth ? HOME_PAGE : LOGIN_PAGE,
         onGenerateRoute: RouterGenerator.onGenerateRoute,
         navigatorKey: DI.of(context).navigatorKey,

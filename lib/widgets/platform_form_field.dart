@@ -28,6 +28,10 @@ class PlatformFormField extends StatelessWidget {
         autofocus: autofocus,
         onChanged: onChanged,
         obscureText: obscureText,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 10,
+        ),
       );
     }
 
@@ -37,6 +41,10 @@ class PlatformFormField extends StatelessWidget {
         autofocus: autofocus,
         onChanged: onChanged,
         obscureText: obscureText,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 5,
+        ),
       );
     }
 

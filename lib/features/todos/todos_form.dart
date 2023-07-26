@@ -30,21 +30,18 @@ class TodosForm extends StatelessWidget {
       }
     }
 
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: FormScaffold(
-        buttonTitle: item != null ? 'Update' : 'Create',
-        values: [title],
-        onSend: send,
-        children: [
-          PlatformFormField(
-            initialValue: title.value,
-            hintText: 'Title',
-            autofocus: true,
-            onChanged: (value) => title.value = value,
-          ),
-        ],
-      ),
+    return FormScaffold(
+      buttonTitle: item != null ? 'Update' : 'Create',
+      values: [title],
+      onSend: send,
+      children: [
+        PlatformFormField(
+          initialValue: title.value,
+          hintText: 'Title',
+          autofocus: true,
+          onChanged: (value) => title.value = value,
+        ),
+      ],
     );
   }
 }

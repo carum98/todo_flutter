@@ -18,7 +18,10 @@ Future<T?> platformShowDialog<T>({
             minWidth: 400,
             maxWidth: 400,
           ),
-          child: builder(),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: builder(),
+          ),
         ),
       ),
     );
@@ -47,7 +50,10 @@ Future<T?> platformShowDialog<T>({
   return await showDialog(
     context: context,
     builder: (_) => Dialog(
-      child: builder(),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: builder(),
+      ),
     ),
   );
 }

@@ -30,10 +30,15 @@ class PlatformButton extends StatelessWidget {
     }
 
     if (Platform.isWindows) {
-      return fluent.FilledButton(
-        onPressed: onPressed,
-        child: Text(buttonTitle),
-      );
+      return textButton
+          ? fluent.HyperlinkButton(
+              onPressed: onPressed,
+              child: Text(buttonTitle),
+            )
+          : fluent.FilledButton(
+              onPressed: onPressed,
+              child: Text(buttonTitle),
+            );
     }
 
     if (Platform.isMacOS) {

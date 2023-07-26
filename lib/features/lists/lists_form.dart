@@ -32,32 +32,29 @@ class ListsForm extends StatelessWidget {
       }
     }
 
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: FormScaffold(
-        buttonTitle: item != null ? 'Update' : 'Create',
-        values: [name],
-        onSend: send,
-        children: [
-          PlatformFormField(
-            initialValue: name.value,
-            hintText: 'Name',
-            autofocus: true,
-            onChanged: (value) => name.value = value,
-          ),
-          ColorPicker(
-            color: color.value,
-            onColorChanged: (Color value) => color.value = value,
-            enableShadesSelection: false,
-            padding: EdgeInsets.zero,
-            width: Platform.isMacOS ? 20 : 40,
-            height: Platform.isMacOS ? 20 : 40,
-            pickersEnabled: const <ColorPickerType, bool>{
-              ColorPickerType.accent: false,
-            },
-          ),
-        ],
-      ),
+    return FormScaffold(
+      buttonTitle: item != null ? 'Update' : 'Create',
+      values: [name],
+      onSend: send,
+      children: [
+        PlatformFormField(
+          initialValue: name.value,
+          hintText: 'Name',
+          autofocus: true,
+          onChanged: (value) => name.value = value,
+        ),
+        ColorPicker(
+          color: color.value,
+          onColorChanged: (Color value) => color.value = value,
+          enableShadesSelection: false,
+          padding: EdgeInsets.zero,
+          width: Platform.isDesktop ? 25 : 40,
+          height: Platform.isDesktop ? 25 : 40,
+          pickersEnabled: const <ColorPickerType, bool>{
+            ColorPickerType.accent: false,
+          },
+        ),
+      ],
     );
   }
 }
