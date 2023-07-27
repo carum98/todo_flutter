@@ -68,3 +68,84 @@ Future<T?> platformShowDialog<T>({
     ),
   );
 }
+
+Future<T?> platformShowDialogAlert<T>({
+  required BuildContext context,
+  required String title,
+  required String content,
+  String confirmTitle = 'Yes',
+  String cancelTitle = 'No',
+}) {
+  if (Platform.isMacOS) {
+    return showMacosAlertDialog(
+      context: context,
+      builder: (_) => MacosAlertDialog(
+        appIcon: const MacosIcon(
+          CupertinoIcons.trash_fill,
+          size: 64,
+          color: Colors.grey,
+        ),
+        title: Text(
+          title,
+          style: MacosTheme.of(context).typography.headline,
+        ),
+        message: Text(
+          content,
+          textAlign: TextAlign.center,
+          style: MacosTypography.of(context).headline,
+        ),
+        primaryButton: PushButton(
+          controlSize: ControlSize.large,
+          child: Text(confirmTitle),
+          onPressed: () => Navigator.pop(context, true),
+        ),
+        secondaryButton: PushButton(
+          controlSize: ControlSize.large,
+          secondary: true,
+          child: Text(cancelTitle),
+          onPressed: () => Navigator.pop(context, false),
+        ),
+      ),
+    );
+  }
+
+  if (Platform.isIOS) {
+    return showCupertinoDialog(
+      context: context,
+      builder: (_) => CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          CupertinoDialogAction(
+            onPressed: () => Navigator.pop(context, false),
+            isDefaultAction: true,
+            child: Text(cancelTitle),
+          ),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(confirmTitle),
+          ),
+        ],
+      ),
+    );
+  }
+
+  return showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      title: Text(title),
+      content: Text(content),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: Text(cancelTitle),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, true),
+          child: Text(confirmTitle),
+        ),
+      ],
+    ),
+  );
+}

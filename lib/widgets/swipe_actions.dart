@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/widgets/platform_show_dialog.dart';
 
 class SwipeActions extends StatelessWidget {
   final ValueKey<int> keyAction;
@@ -56,22 +57,10 @@ class SwipeActions extends StatelessWidget {
           return Future.value(false);
         }
 
-        return showDialog(
+        return platformShowDialogAlert(
           context: context,
-          builder: (_) => AlertDialog(
-            title: const Text('Delete'),
-            content: const Text('Are you sure?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('No'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text('Yes'),
-              ),
-            ],
-          ),
+          title: 'Delete',
+          content: 'Are you sure?',
         );
       },
       child: child,

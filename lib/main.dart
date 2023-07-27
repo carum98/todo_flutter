@@ -18,7 +18,7 @@ void main() async {
     await YaruWindowTitleBar.ensureInitialized();
   }
 
-  if (Platform.isWindows) {
+  if (Platform.isMacOS) {
     await _configureMacosWindowUtils();
   }
 

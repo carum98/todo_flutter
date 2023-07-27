@@ -34,7 +34,7 @@ class DialogMacos extends StatelessWidget {
         borderRadius: kDialogBorderRadius,
       ),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           border: Border.all(
             width: 2,

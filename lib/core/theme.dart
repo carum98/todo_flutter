@@ -74,7 +74,7 @@ class ThemeController {
   );
 
   static const _darkIOS = CupertinoThemeData(
-    // brightness: Brightness.dark,
+    brightness: Brightness.dark,
     primaryColor: appColor,
     applyThemeToAll: true,
   );
