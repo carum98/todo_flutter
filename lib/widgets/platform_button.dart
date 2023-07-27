@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:flutter/cupertino.dart' show CupertinoButton;
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:todo_flutter/core/platform.dart';
@@ -48,6 +49,21 @@ class PlatformButton extends StatelessWidget {
         secondary: textButton,
         child: Text(buttonTitle),
       );
+    }
+
+    if (Platform.isIOS) {
+      return textButton
+          ? CupertinoButton(
+              onPressed: onPressed,
+              child: Text(buttonTitle),
+            )
+          : CupertinoButton.filled(
+              onPressed: onPressed,
+              padding: const EdgeInsets.symmetric(
+                vertical: 0,
+              ),
+              child: Text(buttonTitle),
+            );
     }
 
     return textButton

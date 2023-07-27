@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
@@ -75,6 +76,20 @@ class MyApp extends StatelessWidget {
         initialRoute: isAuth ? HOME_PAGE : LOGIN_PAGE,
         onGenerateRoute: RouterGenerator.onGenerateRoute,
         navigatorKey: DI.of(context).navigatorKey,
+        debugShowCheckedModeBanner: false,
+      );
+    }
+
+    if (Platform.isIOS) {
+      return CupertinoApp(
+        title: 'ToDo App',
+        theme: ThemeController.dark as CupertinoThemeData,
+        initialRoute: isAuth ? HOME_PAGE : LOGIN_PAGE,
+        onGenerateRoute: RouterGenerator.onGenerateRoute,
+        navigatorKey: DI.of(context).navigatorKey,
+        localizationsDelegates: const [
+          DefaultMaterialLocalizations.delegate,
+        ],
         debugShowCheckedModeBanner: false,
       );
     }

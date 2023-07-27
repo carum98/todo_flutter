@@ -1,4 +1,5 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:todo_flutter/core/platform.dart';
@@ -22,7 +23,7 @@ class PlatformFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (Platform.isWindows) {
-      return TextFormBox(
+      return fluent.TextFormBox(
         initialValue: initialValue,
         placeholder: hintText,
         autofocus: autofocus,
@@ -44,6 +45,23 @@ class PlatformFormField extends StatelessWidget {
         padding: const EdgeInsets.symmetric(
           horizontal: 15,
           vertical: 5,
+        ),
+      );
+    }
+
+    if (Platform.isIOS) {
+      return CupertinoTextField(
+        placeholder: hintText,
+        autofocus: autofocus,
+        onChanged: onChanged,
+        obscureText: obscureText,
+        decoration: BoxDecoration(
+          color: Colors.grey[700],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 10,
         ),
       );
     }

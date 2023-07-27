@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart' hide IconButton;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/core/platform.dart';
@@ -72,7 +73,23 @@ class _ScaffoldPlatform extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isWindows) {
+    if (Platform.isIOS) {
+      return CupertinoPageScaffold(
+        resizeToAvoidBottomInset: false,
+        navigationBar: CupertinoNavigationBar(
+          automaticallyImplyLeading: false,
+          middle: Text(title),
+          trailing: CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: onAdd,
+            child: const Icon(CupertinoIcons.add),
+          ),
+        ),
+        child: SafeArea(
+          child: body,
+        ),
+      );
+    } else if (Platform.isWindows) {
       return ScaffoldPage.withPadding(
         header: PageHeader(
           title: Text(title),

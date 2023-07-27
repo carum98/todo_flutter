@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:todo_flutter/core/platform.dart';
@@ -43,6 +44,16 @@ Future<T?> platformShowDialog<T>({
       barrierDismissible: true,
       builder: (_) => DialogMacos(
         child: builder(),
+      ),
+    );
+  }
+
+  if (Platform.isIOS) {
+    return await showCupertinoDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (_) => CupertinoAlertDialog(
+        content: builder(),
       ),
     );
   }

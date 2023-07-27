@@ -78,7 +78,20 @@ class _ScaffoldPlatform extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isLinux) {
+    if (Platform.isIOS) {
+      return CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          middle: Text(title),
+          trailing: CupertinoButton(
+            onPressed: onAdd,
+            child: const Icon(CupertinoIcons.add),
+          ),
+        ),
+        child: SafeArea(
+          child: body,
+        ),
+      );
+    } else if (Platform.isLinux) {
       return YaruDetailPage(
         appBar: YaruWindowTitleBar(
           title: Text(title),

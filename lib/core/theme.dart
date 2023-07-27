@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:todo_flutter/core/platform.dart';
@@ -72,14 +73,23 @@ class ThemeController {
     buttonTheme: _buttonStyleWindows,
   );
 
+  static const _darkIOS = CupertinoThemeData(
+    // brightness: Brightness.dark,
+    primaryColor: appColor,
+    applyThemeToAll: true,
+  );
+
   static final light = Platform.isWindows
       ? _lightWindows
       : Platform.isMacOS
           ? _lightMacos
           : _lightMaterial;
+
   static final dark = Platform.isWindows
       ? _darkWindows
       : Platform.isMacOS
           ? _darkMacos
-          : _darkMaterial;
+          : Platform.isIOS
+              ? _darkIOS
+              : _darkMaterial;
 }

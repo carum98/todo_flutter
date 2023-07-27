@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/models/list_model.dart';
@@ -10,15 +11,39 @@ class ListsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = Stack(
+      alignment: Alignment.center,
+      children: [
+        const Icon(Icons.circle, color: Colors.white, size: 20),
+        Icon(Icons.circle, color: item.color, size: 18),
+      ],
+    );
+
+    onTap() {
+      Navigator.pushNamed(context, TODO_PAGE, arguments: item.id);
+    }
+
+    if (Platform.isIOS) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: CupertinoListTile(
+          leading: color,
+          title: Text(
+            item.name,
+            style: CupertinoTheme.of(context)
+                .textTheme
+                .textStyle
+                .copyWith(fontSize: 20),
+          ),
+          backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
+          onTap: onTap,
+        ),
+      );
+    }
+
     if (Platform.isWindows) {
       return fluent.ListTile(
-        leading: Stack(
-          alignment: Alignment.center,
-          children: [
-            const Icon(Icons.circle, color: Colors.white, size: 20),
-            Icon(Icons.circle, color: item.color, size: 18),
-          ],
-        ),
+        leading: color,
         title: Text(
           item.name,
           style: Theme.of(context).textTheme.titleLarge,
@@ -27,20 +52,12 @@ class ListsTile extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        onPressed: () {
-          Navigator.pushNamed(context, TODO_PAGE, arguments: item.id);
-        },
+        onPressed: onTap,
       );
     }
 
     return ListTile(
-      leading: Stack(
-        alignment: Alignment.center,
-        children: [
-          const Icon(Icons.circle, color: Colors.white, size: 20),
-          Icon(Icons.circle, color: item.color, size: 18),
-        ],
-      ),
+      leading: color,
       title: Text(
         item.name,
         style: Theme.of(context).textTheme.titleLarge,
@@ -49,9 +66,7 @@ class ListsTile extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
-      onTap: () {
-        Navigator.pushNamed(context, TODO_PAGE, arguments: item.id);
-      },
+      onTap: onTap,
     );
   }
 }

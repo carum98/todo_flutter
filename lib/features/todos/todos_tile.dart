@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:todo_flutter/core/platform.dart';
@@ -84,6 +85,20 @@ class _ToDoTileState extends State<ToDoTile> {
           ),
           onClick: onTap,
         ),
+      );
+    }
+
+    if (Platform.isIOS) {
+      return CupertinoListTile(
+        leading: Icon(icon, color: color),
+        title: Text(
+          widget.item.title,
+          style: CupertinoTheme.of(context)
+              .textTheme
+              .textStyle
+              .copyWith(color: color),
+        ),
+        onTap: onTap,
       );
     }
 

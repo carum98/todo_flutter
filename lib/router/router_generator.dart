@@ -17,13 +17,13 @@ class RouterGenerator {
         );
       case LOGIN_PAGE:
         return pageRouter(
-          Platform.isMacOS
+          Platform.isMacOS || Platform.isIOS
               ? const LoginScreen()
               : const Material(child: LoginScreen()),
         );
       case REGISTER_PAGE:
         return pageRouter(
-          Platform.isMacOS
+          Platform.isMacOS || Platform.isIOS
               ? const RegisterScreen()
               : const Material(child: RegisterScreen()),
         );
