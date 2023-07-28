@@ -76,6 +76,79 @@ Future<T?> platformShowDialogAlert<T>({
   String confirmTitle = 'Yes',
   String cancelTitle = 'No',
 }) {
+  if (Platform.isWindows) {
+    return fluent.showDialog(
+      context: context,
+      builder: (_) => fluent.ContentDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          fluent.Button(
+            child: Text(confirmTitle),
+            onPressed: () => Navigator.pop(context, true),
+          ),
+          fluent.FilledButton(
+            onPressed: () => Navigator.pop(context, false),
+            style: fluent.ButtonStyle(
+              padding: fluent.ButtonState.all(
+                const EdgeInsets.symmetric(vertical: 6),
+              ),
+            ),
+            child: Text(cancelTitle),
+          ),
+        ],
+      ),
+    );
+  }
+
+  if (Platform.isLinux) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => Dialog(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            minWidth: 150,
+            maxWidth: 150,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  content,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text(cancelTitle),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: Text(confirmTitle),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   if (Platform.isMacOS) {
     return showMacosAlertDialog(
       context: context,
