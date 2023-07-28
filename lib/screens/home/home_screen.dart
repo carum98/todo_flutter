@@ -6,6 +6,7 @@ import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/features/lists/lists_form.dart';
 import 'package:todo_flutter/models/list_model.dart';
+import 'package:todo_flutter/widgets/context_menu.dart';
 import 'package:todo_flutter/widgets/platform_show_dialog.dart';
 import 'package:yaru_widgets/widgets.dart';
 
@@ -27,9 +28,14 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class _LayoutLinux extends StatelessWidget {
+class _LayoutLinux extends StatefulWidget {
   const _LayoutLinux();
 
+  @override
+  State<_LayoutLinux> createState() => _LayoutLinuxState();
+}
+
+class _LayoutLinuxState extends State<_LayoutLinux> {
   @override
   Widget build(BuildContext context) {
     final repo = DI.of(context).listRepository;
@@ -46,13 +52,15 @@ class _LayoutLinux extends StatelessWidget {
             tileBuilder: (_, index, selected, __) {
               final list = snapshot.data?[index] as ListModel;
 
-              return YaruMasterTile(
-                leading: MacosIcon(
-                  Icons.circle,
-                  color: list.color,
+              return ContextMenu(
+                child: YaruMasterTile(
+                  leading: MacosIcon(
+                    Icons.circle,
+                    color: list.color,
+                  ),
+                  title: Text(list.name),
+                  selected: selected,
                 ),
-                title: Text(list.name),
-                selected: selected,
               );
             },
             bottomBar: TextButton.icon(
@@ -63,7 +71,7 @@ class _LayoutLinux extends StatelessWidget {
                 );
 
                 if (item != null) {
-                  print(item);
+                  setState(() {});
                 }
               },
               icon: const Icon(Icons.add),
@@ -107,9 +115,14 @@ class _LayoutWindows extends StatelessWidget {
   }
 }
 
-class _LayoutMacos extends StatelessWidget {
+class _LayoutMacos extends StatefulWidget {
   const _LayoutMacos();
 
+  @override
+  State<_LayoutMacos> createState() => _LayoutMacosState();
+}
+
+class _LayoutMacosState extends State<_LayoutMacos> {
   @override
   Widget build(BuildContext context) {
     final repo = DI.of(context).listRepository;
@@ -142,7 +155,7 @@ class _LayoutMacos extends StatelessWidget {
             );
 
             if (item != null) {
-              print(item);
+              setState(() {});
             }
           },
           icon: const MacosIcon(
@@ -196,7 +209,9 @@ class __ListState extends State<_List> {
             CupertinoIcons.circle_fill,
             color: e.color,
           ),
-          label: Text(e.name),
+          label: ContextMenu(
+            child: Text(e.name),
+          ),
         );
       }).toList(),
     );
