@@ -90,6 +90,7 @@ class _ToDoTileState extends State<ToDoTile> {
 
     if (Platform.isIOS) {
       return CupertinoListTile(
+        padding: const EdgeInsets.all(8.0),
         leading: Icon(icon, color: color),
         title: Text(
           widget.item.title,

@@ -44,6 +44,7 @@ class _TodoScreenState extends State<TodoScreen> {
               items: snapshot.data as List<TodoModel>,
               repository: repo,
               reorderable: true,
+              withDivider: true,
               formBuilder: (item) => TodosForm(
                 item: item,
                 listId: widget.listId,

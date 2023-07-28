@@ -7,6 +7,7 @@ import 'swipe_actions.dart';
 class ListScaffold<T, D> extends StatefulWidget {
   final List<T> items;
   final bool reorderable;
+  final bool withDivider;
   final Repository<T, D> repository;
   final Widget Function(T item, int index) itemBuilder;
   final Widget Function(T item) formBuilder;
@@ -16,6 +17,7 @@ class ListScaffold<T, D> extends StatefulWidget {
     super.key,
     required this.items,
     this.reorderable = false,
+    this.withDivider = false,
     required this.repository,
     required this.itemBuilder,
     required this.formBuilder,
@@ -36,12 +38,16 @@ class _ListScaffoldState<T, D> extends State<ListScaffold<T, D>> {
       itemBuilder: (item, index) {
         final key = ValueKey(widget.indentifierBuilder(item));
 
-        return SwipeActions(
+        return TileDivider(
           key: key,
-          keyAction: key,
-          onDelete: () => onDelete(item, index),
-          onEdit: () => onEdit(item, index),
-          child: widget.itemBuilder(item, index),
+          isLast: index == widget.items.length - 1,
+          enabled: widget.withDivider,
+          child: SwipeActions(
+            keyAction: key,
+            onDelete: () => onDelete(item, index),
+            onEdit: () => onEdit(item, index),
+            child: widget.itemBuilder(item, index),
+          ),
         );
       },
     );
@@ -125,5 +131,36 @@ class _ListBuilder<T> extends StatelessWidget {
         },
       );
     }
+  }
+}
+
+class TileDivider extends StatelessWidget {
+  final Widget child;
+  final bool isLast;
+  final bool enabled;
+
+  const TileDivider({
+    super.key,
+    required this.child,
+    required this.isLast,
+    this.enabled = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: key,
+      decoration: enabled
+          ? BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: isLast ? Colors.transparent : Colors.grey,
+                  width: 0.5,
+                ),
+              ),
+            )
+          : null,
+      child: child,
+    );
   }
 }
