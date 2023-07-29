@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/core/platform.dart';
-import 'package:todo_flutter/features/lists/lists_form.dart';
+import 'package:todo_flutter/modules/lists/lists_form.dart';
 import 'package:todo_flutter/models/list_model.dart';
 import 'package:todo_flutter/widgets/context_menu.dart';
 import 'package:todo_flutter/widgets/platform_show_dialog.dart';
