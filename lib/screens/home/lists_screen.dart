@@ -6,7 +6,8 @@ import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/modules/lists/lists_form.dart';
 import 'package:todo_flutter/modules/lists/lists_tile.dart';
 import 'package:todo_flutter/models/list_model.dart';
-import 'package:todo_flutter/widgets/list_scaffold.dart';
+import 'package:todo_flutter/widgets/list_scaffold/list_scaffold.dart';
+// import 'package:todo_flutter/widgets/list_scaffold.dart';
 import 'package:todo_flutter/widgets/platform_show_dialog.dart';
 
 class ListsScreen extends StatefulWidget {
@@ -45,7 +46,6 @@ class _ListsScreenState extends State<ListsScreen> {
               items: snapshot.data as List<ListModel>,
               repository: repo,
               formBuilder: (item) => ListsForm(item: item),
-              indentifierBuilder: (item) => item.id,
               itemBuilder: (item, index) => Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListsTile(item: item),

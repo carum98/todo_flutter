@@ -3,7 +3,15 @@ import 'package:native_context_menu/native_context_menu.dart';
 
 class ContextMenu extends StatelessWidget {
   final Widget child;
-  const ContextMenu({super.key, required this.child});
+  final void Function() onEdit;
+  final void Function() onDelete;
+
+  const ContextMenu({
+    super.key,
+    required this.child,
+    required this.onEdit,
+    required this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +22,11 @@ class ContextMenu extends StatelessWidget {
       menuItems: [
         MenuItem(
           title: 'Edit',
-          onSelected: () => print('edit'),
+          onSelected: () => onEdit(),
         ),
         MenuItem(
           title: 'Remove',
-          onSelected: () => print('remove'),
+          onSelected: () => onDelete(),
         )
       ],
       child: child,

@@ -1,7 +1,10 @@
 import 'package:flutter/widgets.dart';
+import 'package:todo_flutter/core/identifiable_interfaz.dart';
 
-class ListModel {
+class ListModel implements Identifiable {
+  @override
   final int id;
+
   final String name;
   final Color color;
 

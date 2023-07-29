@@ -6,7 +6,6 @@ import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/modules/lists/lists_form.dart';
 import 'package:todo_flutter/models/list_model.dart';
-import 'package:todo_flutter/widgets/context_menu.dart';
 import 'package:todo_flutter/widgets/platform_show_dialog.dart';
 import 'package:yaru_widgets/widgets.dart';
 
@@ -52,15 +51,13 @@ class _LayoutLinuxState extends State<_LayoutLinux> {
             tileBuilder: (_, index, selected, __) {
               final list = snapshot.data?[index] as ListModel;
 
-              return ContextMenu(
-                child: YaruMasterTile(
-                  leading: MacosIcon(
-                    Icons.circle,
-                    color: list.color,
-                  ),
-                  title: Text(list.name),
-                  selected: selected,
+              return YaruMasterTile(
+                leading: MacosIcon(
+                  Icons.circle,
+                  color: list.color,
                 ),
+                title: Text(list.name),
+                selected: selected,
               );
             },
             bottomBar: TextButton.icon(
@@ -209,9 +206,7 @@ class __ListState extends State<_List> {
             CupertinoIcons.circle_fill,
             color: e.color,
           ),
-          label: ContextMenu(
-            child: Text(e.name),
-          ),
+          label: Text(e.name),
         );
       }).toList(),
     );

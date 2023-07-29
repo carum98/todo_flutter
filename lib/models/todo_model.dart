@@ -1,5 +1,9 @@
-class TodoModel {
+import 'package:todo_flutter/core/identifiable_interfaz.dart';
+
+class TodoModel implements Identifiable {
+  @override
   final int id;
+
   final String title;
   final bool completed;
 

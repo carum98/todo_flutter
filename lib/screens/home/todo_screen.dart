@@ -7,7 +7,7 @@ import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/modules/todos/todos_form.dart';
 import 'package:todo_flutter/modules/todos/todos_tile.dart';
 import 'package:todo_flutter/models/todo_model.dart';
-import 'package:todo_flutter/widgets/list_scaffold.dart';
+import 'package:todo_flutter/widgets/list_scaffold/list_scaffold.dart';
 import 'package:todo_flutter/widgets/platform_show_dialog.dart';
 import 'package:yaru_widgets/widgets.dart';
 
@@ -49,7 +49,6 @@ class _TodoScreenState extends State<TodoScreen> {
                 item: item,
                 listId: widget.listId,
               ),
-              indentifierBuilder: (item) => item.id,
               itemBuilder: (item, index) => ToDoTile(
                 item: item,
                 onTap: () => repo.toggle(item.id),

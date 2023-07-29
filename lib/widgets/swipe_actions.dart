@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:todo_flutter/widgets/platform_show_dialog.dart';
 
 class SwipeActions extends StatelessWidget {
   final ValueKey<int> keyAction;
   final Widget child;
-  final Function() onEdit;
-  final Function() onDelete;
+  final void Function() onEdit;
+  final void Function() onDelete;
+  final Future<bool> Function() confirmDismiss;
 
   const SwipeActions({
     super.key,
@@ -13,6 +13,7 @@ class SwipeActions extends StatelessWidget {
     required this.child,
     required this.onEdit,
     required this.onDelete,
+    required this.confirmDismiss,
   });
 
   @override
@@ -57,11 +58,7 @@ class SwipeActions extends StatelessWidget {
           return Future.value(false);
         }
 
-        return platformShowDialogAlert(
-          context: context,
-          title: 'Delete',
-          content: 'Are you sure?',
-        );
+        return await confirmDismiss();
       },
       child: child,
     );

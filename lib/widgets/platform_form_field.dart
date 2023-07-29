@@ -38,6 +38,7 @@ class PlatformFormField extends StatelessWidget {
 
     if (Platform.isMacOS) {
       return MacosTextField(
+        controller: TextEditingController(text: initialValue),
         placeholder: hintText,
         autofocus: autofocus,
         onChanged: onChanged,
@@ -51,6 +52,7 @@ class PlatformFormField extends StatelessWidget {
 
     if (Platform.isIOS) {
       return CupertinoTextField(
+        controller: TextEditingController(text: initialValue),
         placeholder: hintText,
         autofocus: autofocus,
         onChanged: onChanged,
