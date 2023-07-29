@@ -7,7 +7,6 @@ import 'package:todo_flutter/modules/lists/lists_form.dart';
 import 'package:todo_flutter/modules/lists/lists_tile.dart';
 import 'package:todo_flutter/models/list_model.dart';
 import 'package:todo_flutter/widgets/list_scaffold/list_scaffold.dart';
-// import 'package:todo_flutter/widgets/list_scaffold.dart';
 import 'package:todo_flutter/widgets/platform_show_dialog.dart';
 
 class ListsScreen extends StatefulWidget {
@@ -18,10 +17,6 @@ class ListsScreen extends StatefulWidget {
 }
 
 class _ListsScreenState extends State<ListsScreen> {
-  void logout() {
-    DI.of(context).authRepository.logout(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     final repo = DI.of(context).listRepository;

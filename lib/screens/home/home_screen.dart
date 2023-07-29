@@ -6,6 +6,7 @@ import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/modules/lists/lists_form.dart';
 import 'package:todo_flutter/models/list_model.dart';
+import 'package:todo_flutter/widgets/context_menu.dart';
 import 'package:todo_flutter/widgets/platform_show_dialog.dart';
 import 'package:yaru_widgets/widgets.dart';
 
@@ -17,72 +18,13 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isLinux) {
-      return const _LayoutLinux();
+    if (Platform.isLinux || Platform.isMacOS) {
+      return const _ScaffoldPlatform();
     } else if (Platform.isWindows) {
       return const _LayoutWindows();
-    } else {
-      return const _LayoutMacos();
     }
-  }
-}
 
-class _LayoutLinux extends StatefulWidget {
-  const _LayoutLinux();
-
-  @override
-  State<_LayoutLinux> createState() => _LayoutLinuxState();
-}
-
-class _LayoutLinuxState extends State<_LayoutLinux> {
-  @override
-  Widget build(BuildContext context) {
-    final repo = DI.of(context).listRepository;
-
-    return Scaffold(
-      body: FutureBuilder(
-        future: repo.getAll(),
-        builder: (_, snapshot) {
-          return YaruMasterDetailPage(
-            length: snapshot.data?.length ?? 0,
-            appBar: const YaruWindowTitleBar(
-              title: Text('ToDo App'),
-            ),
-            tileBuilder: (_, index, selected, __) {
-              final list = snapshot.data?[index] as ListModel;
-
-              return YaruMasterTile(
-                leading: MacosIcon(
-                  Icons.circle,
-                  color: list.color,
-                ),
-                title: Text(list.name),
-                selected: selected,
-              );
-            },
-            bottomBar: TextButton.icon(
-              onPressed: () async {
-                final item = await platformShowDialog(
-                  context: context,
-                  builder: () => const ListsForm(),
-                );
-
-                if (item != null) {
-                  setState(() {});
-                }
-              },
-              icon: const Icon(Icons.add),
-              label: const Text('Add List'),
-            ),
-            pageBuilder: (_, index) {
-              return TodoScreen(
-                listId: snapshot.data![index].id,
-              );
-            },
-          );
-        },
-      ),
-    );
+    throw UnsupportedError('Unsupported platform');
   }
 }
 
@@ -112,103 +54,150 @@ class _LayoutWindows extends StatelessWidget {
   }
 }
 
-class _LayoutMacos extends StatefulWidget {
-  const _LayoutMacos();
+class _ScaffoldPlatform extends StatefulWidget {
+  const _ScaffoldPlatform();
 
   @override
-  State<_LayoutMacos> createState() => _LayoutMacosState();
+  State<_ScaffoldPlatform> createState() => __ScaffoldPlatformState();
 }
 
-class _LayoutMacosState extends State<_LayoutMacos> {
+class __ScaffoldPlatformState extends State<_ScaffoldPlatform> {
+  Widget pageBuilder(int id) => TodoScreen(listId: id);
+
+  Future<void> dialog(ListModel? item) async {
+    final data = await platformShowDialog(
+      context: context,
+      builder: () => ListsForm(item: item),
+    );
+
+    if (data != null) {
+      setState(() {});
+    }
+  }
+
+  Future<void> onRemove(ListModel item) async {
+    final delete = await platformShowDialogAlert<bool>(
+      context: context,
+      title: 'Delete',
+      content: 'Are you sure?',
+    );
+
+    if ((delete ?? false) && context.mounted) {
+      await DI.of(context).listRepository.delete(item.id);
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final repo = DI.of(context).listRepository;
 
-    final taskId = ValueNotifier<int?>(null);
+    if (Platform.isLinux) {
+      return FutureBuilder(
+        future: repo.getAll(),
+        builder: (_, snapshot) {
+          return YaruMasterDetailPage(
+            length: snapshot.data?.length ?? 0,
+            appBar: const YaruWindowTitleBar(
+              title: Text('ToDo App'),
+            ),
+            tileBuilder: (_, index, selected, __) {
+              final list = snapshot.data?[index] as ListModel;
 
-    return MacosWindow(
-      sidebar: Sidebar(
-        minWidth: 200,
-        builder: (_, __) {
-          return FutureBuilder(
-            future: repo.getAll(),
-            builder: (_, snapshot) {
-              if (snapshot.hasData) {
-                return _List(
-                  items: snapshot.data!,
-                  onTap: (value) => taskId.value = value.id,
-                );
-              }
-
-              return const Center(child: CircularProgressIndicator());
+              return ContextMenu(
+                onDelete: () => onRemove(list),
+                onEdit: () => dialog(list),
+                child: YaruMasterTile(
+                  leading: MacosIcon(
+                    Icons.circle,
+                    color: list.color,
+                  ),
+                  title: Text(list.name),
+                  selected: selected,
+                ),
+              );
             },
+            bottomBar: TextButton.icon(
+              onPressed: () => dialog(null),
+              icon: const Icon(Icons.add),
+              label: const Text('Add List'),
+            ),
+            pageBuilder: (_, index) => pageBuilder(snapshot.data![index].id),
           );
         },
-        bottom: TextButton.icon(
-          onPressed: () async {
-            final item = await platformShowDialog(
-              context: context,
-              builder: () => const ListsForm(),
-            );
+      );
+    }
 
-            if (item != null) {
-              setState(() {});
-            }
+    if (Platform.isMacOS) {
+      final taskId = ValueNotifier<int?>(null);
+
+      int index = 0;
+
+      return MacosWindow(
+        sidebar: Sidebar(
+          minWidth: 200,
+          builder: (_, __) {
+            return FutureBuilder(
+              future: repo.getAll(),
+              builder: (_, snapshot) {
+                if (snapshot.hasData) {
+                  return StatefulBuilder(
+                    builder: (context, setState) {
+                      return SidebarItems(
+                        currentIndex: index,
+                        onChanged: (v) {
+                          setState(() => index = v);
+                          taskId.value = snapshot.data![v].id;
+                        },
+                        items: snapshot.data!
+                            .map(
+                              (e) => SidebarItem(
+                                leading: MacosIcon(
+                                  CupertinoIcons.circle_fill,
+                                  color: e.color,
+                                ),
+                                label: ContextMenu(
+                                  onDelete: () => onRemove(e),
+                                  onEdit: () => dialog(e),
+                                  child: Text(e.name),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      );
+                    },
+                  );
+                }
+
+                return Container();
+              },
+            );
           },
-          icon: const MacosIcon(
-            CupertinoIcons.add_circled,
-            color: Colors.grey,
-          ),
-          label: const Text('New List'),
-          style: TextButton.styleFrom(
-            foregroundColor: Colors.grey,
+          bottom: TextButton.icon(
+            onPressed: () => dialog(null),
+            icon: const MacosIcon(
+              CupertinoIcons.add_circled,
+              color: Colors.grey,
+            ),
+            label: const Text('New List'),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.grey,
+            ),
           ),
         ),
-      ),
-      child: ValueListenableBuilder<int?>(
-        valueListenable: taskId,
-        builder: (_, id, __) {
-          if (id != null) {
-            return TodoScreen(listId: id);
-          }
+        child: ValueListenableBuilder<int?>(
+          valueListenable: taskId,
+          builder: (_, id, __) {
+            if (id != null) {
+              return pageBuilder(id);
+            }
 
-          return const Center(child: Text('Select a list'));
-        },
-      ),
-    );
-  }
-}
+            return Container();
+          },
+        ),
+      );
+    }
 
-class _List extends StatefulWidget {
-  final List<ListModel> items;
-  final Function(ListModel) onTap;
-  const _List({required this.items, required this.onTap});
-
-  @override
-  State<_List> createState() => __ListState();
-}
-
-class __ListState extends State<_List> {
-  int index = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return SidebarItems(
-      currentIndex: index,
-      onChanged: (v) {
-        setState(() => index = v);
-
-        widget.onTap(widget.items[v]);
-      },
-      items: widget.items.map((e) {
-        return SidebarItem(
-          leading: MacosIcon(
-            CupertinoIcons.circle_fill,
-            color: e.color,
-          ),
-          label: Text(e.name),
-        );
-      }).toList(),
-    );
+    throw UnimplementedError();
   }
 }
