@@ -41,10 +41,7 @@ class _ListsScreenState extends State<ListsScreen> {
               items: snapshot.data as List<ListModel>,
               repository: repo,
               formBuilder: (item) => ListsForm(item: item),
-              itemBuilder: (item, index) => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListsTile(item: item),
-              ),
+              itemBuilder: (item, index) => ListsTile(item: item),
             );
           }
 

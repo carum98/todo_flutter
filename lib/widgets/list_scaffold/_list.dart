@@ -26,15 +26,28 @@ class _List<T> extends StatelessWidget {
         },
       );
     } else {
-      return ListView.builder(
-        padding: const EdgeInsets.all(10),
-        itemCount: items.length,
-        itemBuilder: (_, index) {
-          final item = items[index];
+      if (Platform.isIOS) {
+        final children = items
+            .map((item) => itemBuilder(item, items.indexOf(item)))
+            .toList();
 
-          return itemBuilder(item, index);
-        },
-      );
+        return SingleChildScrollView(
+          child: CupertinoListSection.insetGrouped(
+            additionalDividerMargin: 30,
+            children: children,
+          ),
+        );
+      } else {
+        return ListView.builder(
+          padding: const EdgeInsets.all(10),
+          itemCount: items.length,
+          itemBuilder: (_, index) {
+            final item = items[index];
+
+            return itemBuilder(item, index);
+          },
+        );
+      }
     }
   }
 }
