@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:todo_flutter/bloc/lists_bloc.dart';
 import 'package:todo_flutter/repository/auth_repository.dart';
 import 'package:todo_flutter/repository/list_respository.dart';
 import 'package:todo_flutter/repository/todo_repository.dart';
@@ -21,6 +22,8 @@ class DI extends InheritedWidget {
   late final ApiService _apiService;
   late final ListService _listService;
   late final TodoService _todoService;
+
+  late final ListBloc listBloc;
 
   DI({
     super.key,
@@ -56,6 +59,10 @@ class DI extends InheritedWidget {
 
     todoRepository = TodoRepository(
       api: _todoService,
+    );
+
+    listBloc = ListBloc(
+      repository: listRepository,
     );
   }
 

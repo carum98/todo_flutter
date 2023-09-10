@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart' hide Colors;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
+import 'package:todo_flutter/bloc/lists_bloc.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/modules/lists/lists_form.dart';
@@ -55,55 +56,59 @@ class _LayoutWindows extends StatelessWidget {
   }
 }
 
-class _ScaffoldPlatform extends StatefulWidget {
+class _ScaffoldPlatform extends StatelessWidget {
   const _ScaffoldPlatform();
-
-  @override
-  State<_ScaffoldPlatform> createState() => __ScaffoldPlatformState();
-}
-
-class __ScaffoldPlatformState extends State<_ScaffoldPlatform> {
-  Widget pageBuilder(int id) => TodoScreen(listId: id);
-
-  Future<void> dialog(ListModel? item) async {
-    final data = await platformShowDialog(
-      context: context,
-      builder: () => ListsForm(item: item),
-    );
-
-    if (data != null) {
-      setState(() {});
-    }
-  }
-
-  Future<void> onRemove(ListModel item) async {
-    final delete = await platformShowDialogAlert<bool>(
-      context: context,
-      title: 'Delete',
-      content: 'Are you sure?',
-    );
-
-    if ((delete ?? false) && context.mounted) {
-      await DI.of(context).listRepository.delete(item.id);
-      setState(() {});
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final repo = DI.of(context).listRepository;
+    final bloc = DI.of(context).listBloc;
+
+    bloc.onEvent(ListBlocGetAll());
+
+    Future<void> dialog(ListModel? item) async {
+      final data = await platformShowDialog(
+        context: context,
+        builder: () => ListsForm(item: item),
+      );
+
+      if (item == null) {
+        bloc.onEvent(ListBlocAdd(data));
+      } else {
+        bloc.onEvent(ListBlocUpdate(data));
+      }
+    }
+
+    Future<void> onRemove(ListModel item) async {
+      final delete = await platformShowDialogAlert<bool>(
+        context: context,
+        title: 'Delete',
+        content: 'Are you sure?',
+      );
+
+      if (delete == true) {
+        await repo.delete(item.id);
+        bloc.onEvent(ListBlocDelete(item));
+      }
+    }
 
     if (Platform.isLinux) {
-      return FutureBuilder(
-        future: repo.getAll(),
+      return StreamBuilder(
+        stream: bloc.stream,
         builder: (_, snapshot) {
+          if (!snapshot.hasData) {
+            return const SizedBox();
+          }
+
+          final items = (snapshot.data as ListBlocLoaded).items;
+
           return YaruMasterDetailPage(
-            length: snapshot.data?.length ?? 0,
+            length: items.length,
             appBar: const YaruWindowTitleBar(
               title: Text('ToDo App'),
             ),
             tileBuilder: (_, index, selected, __) {
-              final list = snapshot.data?[index] as ListModel;
+              final list = items[index];
 
               return ContextMenu(
                 onDelete: () => onRemove(list),
@@ -124,7 +129,7 @@ class __ScaffoldPlatformState extends State<_ScaffoldPlatform> {
               icon: const Icon(Icons.add),
               label: const Text('Add List'),
             ),
-            pageBuilder: (_, index) => pageBuilder(snapshot.data![index].id),
+            pageBuilder: (_, index) => TodoScreen(listId: items[index].id),
           );
         },
       );
@@ -137,42 +142,48 @@ class __ScaffoldPlatformState extends State<_ScaffoldPlatform> {
 
       return MacosWindow(
         sidebar: Sidebar(
-          minWidth: 200,
-          builder: (_, __) {
-            return FutureBuilder(
-              future: repo.getAll(),
+          minWidth: 250,
+          builder: (_, scrollController) {
+            return StreamBuilder(
+              stream: bloc.stream,
               builder: (_, snapshot) {
-                if (snapshot.hasData) {
-                  return StatefulBuilder(
-                    builder: (context, setState) {
-                      return SidebarItems(
-                        currentIndex: index,
-                        onChanged: (v) {
-                          setState(() => index = v);
-                          taskId.value = snapshot.data![v].id;
-                        },
-                        items: snapshot.data!
-                            .map(
-                              (e) => SidebarItem(
-                                leading: MacosIcon(
-                                  CupertinoIcons.circle_fill,
-                                  color: e.color,
-                                ),
-                                label: ContextMenu(
-                                  onDelete: () => onRemove(e),
-                                  onEdit: () => dialog(e),
-                                  child: Text(e.name),
-                                ),
-                                trailing: ListCounter(count: e.count),
-                              ),
-                            )
-                            .toList(),
-                      );
-                    },
-                  );
+                if (!snapshot.hasData) {
+                  return const SizedBox();
                 }
 
-                return Container();
+                final items = (snapshot.data as ListBlocLoaded).items;
+
+                return StatefulBuilder(
+                  builder: (context, setState) {
+                    return SidebarItems(
+                      currentIndex: index,
+                      scrollController: scrollController,
+                      onChanged: (v) {
+                        setState(() => index = v);
+                        taskId.value = items[v].id;
+                      },
+                      items: items
+                          .map(
+                            (e) => SidebarItem(
+                              leading: MacosIcon(
+                                CupertinoIcons.circle_fill,
+                                color: e.color,
+                              ),
+                              label: ContextMenu(
+                                onDelete: () => onRemove(e),
+                                onEdit: () => dialog(e),
+                                child: Text(
+                                  e.name,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              trailing: ListCounter(count: e.count),
+                            ),
+                          )
+                          .toList(),
+                    );
+                  },
+                );
               },
             );
           },
@@ -192,7 +203,7 @@ class __ScaffoldPlatformState extends State<_ScaffoldPlatform> {
           valueListenable: taskId,
           builder: (_, id, __) {
             if (id != null) {
-              return pageBuilder(id);
+              return TodoScreen(listId: id);
             }
 
             return Container();

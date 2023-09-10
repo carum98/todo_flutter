@@ -1,25 +1,23 @@
 import 'package:fluent_ui/fluent_ui.dart' hide IconButton;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/bloc/lists_bloc.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/modules/lists/lists_form.dart';
 import 'package:todo_flutter/modules/lists/lists_tile.dart';
-import 'package:todo_flutter/models/list_model.dart';
 import 'package:todo_flutter/widgets/list_scaffold/list_scaffold.dart';
 import 'package:todo_flutter/widgets/platform_show_dialog.dart';
 
-class ListsScreen extends StatefulWidget {
+class ListsScreen extends StatelessWidget {
   const ListsScreen({super.key});
 
   @override
-  State<ListsScreen> createState() => _ListsScreenState();
-}
-
-class _ListsScreenState extends State<ListsScreen> {
-  @override
   Widget build(BuildContext context) {
     final repo = DI.of(context).listRepository;
+    final bloc = DI.of(context).listBloc;
+
+    bloc.onEvent(ListBlocGetAll());
 
     return _ScaffoldPlatform(
       title: 'ToDo App',
@@ -30,15 +28,15 @@ class _ListsScreenState extends State<ListsScreen> {
         );
 
         if (item != null) {
-          setState(() {});
+          bloc.onEvent(ListBlocAdd(item));
         }
       },
-      body: FutureBuilder(
-        future: repo.getAll(),
+      body: StreamBuilder(
+        stream: bloc.stream,
         builder: (_, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.data is ListBlocLoaded) {
             return ListScaffold(
-              items: snapshot.data as List<ListModel>,
+              items: (snapshot.data as ListBlocLoaded).items,
               repository: repo,
               formBuilder: (item) => ListsForm(item: item),
               itemBuilder: (item, index) => ListsTile(item: item),
