@@ -2,11 +2,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:macos_ui/macos_ui.dart';
+import 'package:todo_flutter/bloc/todo_bloc.dart';
 import 'package:todo_flutter/core/dependency_injector.dart';
 import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/modules/todos/todos_form.dart';
 import 'package:todo_flutter/modules/todos/todos_tile.dart';
-import 'package:todo_flutter/models/todo_model.dart';
 import 'package:todo_flutter/widgets/list_scaffold/list_scaffold.dart';
 import 'package:todo_flutter/widgets/platform_show_dialog.dart';
 import 'package:yaru_widgets/widgets.dart';
@@ -20,10 +20,32 @@ class TodoScreen extends StatefulWidget {
 }
 
 class _TodoScreenState extends State<TodoScreen> {
+  late final TodoBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final di = context.findAncestorWidgetOfExactType<DI>()!;
+
+    bloc = TodoBloc(
+      listId: widget.listId,
+      repository: di.todoRepository,
+      listBloc: di.listBloc,
+    );
+
+    bloc.onEvent(TodoBlocGetAll());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    bloc.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final repo = DI.of(context).todoRepository;
-
     return _ScaffoldPlatform(
       title: 'ToDos',
       onAdd: () async {
@@ -33,16 +55,16 @@ class _TodoScreenState extends State<TodoScreen> {
         );
 
         if (item != null) {
-          setState(() {});
+          bloc.onEvent(TodoBlocAdd(item));
         }
       },
-      body: FutureBuilder(
-        future: repo.getTodos(widget.listId),
+      body: StreamBuilder(
+        stream: bloc.stream,
         builder: (_, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.data is TodoBlocLoaded) {
             return ListScaffold(
-              items: snapshot.data as List<TodoModel>,
-              repository: repo,
+              items: (snapshot.data as TodoBlocLoaded).items,
+              repository: DI.of(context).todoRepository,
               reorderable: true,
               withDivider: true,
               formBuilder: (item) => TodosForm(
@@ -51,7 +73,7 @@ class _TodoScreenState extends State<TodoScreen> {
               ),
               itemBuilder: (item, index) => ToDoTile(
                 item: item,
-                onTap: () => repo.toggle(item.id),
+                onTap: () => bloc.onEvent(TodoBlocToggle(item)),
               ),
             );
           }

@@ -22,3 +22,15 @@ class ListBlocDelete extends ListBlocEvent {
 
   ListBlocDelete(this.item);
 }
+
+class ListBlocIncressCount extends ListBlocEvent {
+  final int listId;
+
+  ListBlocIncressCount(this.listId);
+}
+
+class ListBlocDecressCount extends ListBlocEvent {
+  final int listId;
+
+  ListBlocDecressCount(this.listId);
+}

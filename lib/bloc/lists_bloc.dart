@@ -30,6 +30,10 @@ class ListBloc {
       await _update(event);
     } else if (event is ListBlocDelete) {
       await _delete(event);
+    } else if (event is ListBlocIncressCount) {
+      await _setCount(event.listId, 1);
+    } else if (event is ListBlocDecressCount) {
+      await _setCount(event.listId, -1);
     }
   }
 
@@ -70,6 +74,18 @@ class ListBloc {
       final index = items.indexWhere((x) => x.id == event.item.id);
 
       items.removeAt(index);
+
+      _controller.add(ListBlocLoaded(items));
+    }
+  }
+
+  Future<void> _setCount(int listId, int value) async {
+    if (state is ListBlocLoaded) {
+      final items = (state as ListBlocLoaded).items;
+
+      final index = items.indexWhere((x) => x.id == listId);
+
+      items[index] = items[index].copyWith(count: items[index].count + value);
 
       _controller.add(ListBlocLoaded(items));
     }

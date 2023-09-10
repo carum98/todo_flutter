@@ -26,4 +26,18 @@ class ListModel implements Identifiable {
       count: json['count']['pending'],
     );
   }
+
+  ListModel copyWith({
+    int? id,
+    String? name,
+    Color? color,
+    int? count,
+  }) {
+    return ListModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      color: color ?? this.color,
+      count: count ?? this.count,
+    );
+  }
 }
