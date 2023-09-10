@@ -7,11 +7,13 @@ class ListModel implements Identifiable {
 
   final String name;
   final Color color;
+  final int count;
 
   ListModel({
     required this.id,
     required this.name,
     required this.color,
+    required this.count,
   });
 
   factory ListModel.fromJson(Map<String, dynamic> json) {
@@ -21,6 +23,7 @@ class ListModel implements Identifiable {
       color: Color(
         int.parse((json['color'] as String).replaceAll('#', '0xFF')),
       ),
+      count: json['count']['pending'],
     );
   }
 }

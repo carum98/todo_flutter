@@ -7,6 +7,7 @@ import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/modules/lists/lists_form.dart';
 import 'package:todo_flutter/models/list_model.dart';
 import 'package:todo_flutter/widgets/context_menu.dart';
+import 'package:todo_flutter/widgets/list_counter.dart';
 import 'package:todo_flutter/widgets/platform_show_dialog.dart';
 import 'package:yaru_widgets/widgets.dart';
 
@@ -114,6 +115,7 @@ class __ScaffoldPlatformState extends State<_ScaffoldPlatform> {
                   ),
                   title: Text(list.name),
                   selected: selected,
+                  trailing: ListCounter(count: list.count),
                 ),
               );
             },
@@ -161,6 +163,7 @@ class __ScaffoldPlatformState extends State<_ScaffoldPlatform> {
                                   onEdit: () => dialog(e),
                                   child: Text(e.name),
                                 ),
+                                trailing: ListCounter(count: e.count),
                               ),
                             )
                             .toList(),

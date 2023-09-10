@@ -4,6 +4,7 @@ import 'package:todo_flutter/core/platform.dart';
 import 'package:todo_flutter/models/list_model.dart';
 import 'package:todo_flutter/router/router_name.dart';
 import 'package:fluent_ui/fluent_ui.dart' as fluent;
+import 'package:todo_flutter/widgets/list_counter.dart';
 
 class ListsTile extends StatelessWidget {
   final ListModel item;
@@ -24,6 +25,8 @@ class ListsTile extends StatelessWidget {
       style: Theme.of(context).textTheme.titleLarge,
     );
 
+    final counter = ListCounter(count: item.count);
+
     onTap() {
       Navigator.pushNamed(context, TODO_PAGE, arguments: item.id);
     }
@@ -42,6 +45,7 @@ class ListsTile extends StatelessWidget {
         ),
         backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
         trailing: const CupertinoListTileChevron(),
+        additionalInfo: counter,
         onTap: onTap,
       );
     }
@@ -53,6 +57,7 @@ class ListsTile extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
+        trailing: counter,
         onPressed: onTap,
       );
     }
@@ -66,6 +71,7 @@ class ListsTile extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
+        trailing: counter,
         onTap: onTap,
       ),
     );
