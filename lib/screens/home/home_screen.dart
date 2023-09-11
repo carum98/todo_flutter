@@ -61,7 +61,6 @@ class _ScaffoldPlatform extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final repo = DI.of(context).listRepository;
     final bloc = DI.of(context).listBloc;
 
     bloc.onEvent(ListBlocGetAll());
@@ -87,7 +86,6 @@ class _ScaffoldPlatform extends StatelessWidget {
       );
 
       if (delete == true) {
-        await repo.delete(item.id);
         bloc.onEvent(ListBlocDelete(item));
       }
     }

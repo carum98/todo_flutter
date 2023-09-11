@@ -73,6 +73,7 @@ class ListsTile extends StatelessWidget {
         ),
         trailing: counter,
         onTap: onTap,
+        dense: true,
       ),
     );
   }

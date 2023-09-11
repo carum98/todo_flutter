@@ -60,7 +60,6 @@ class ListBloc {
       final items = (state as ListBlocLoaded).items;
 
       final index = items.indexWhere((x) => x.id == event.item.id);
-
       items[index] = event.item;
 
       _controller.add(ListBlocLoaded(items));
@@ -69,10 +68,11 @@ class ListBloc {
 
   Future<void> _delete(ListBlocDelete event) async {
     if (state is ListBlocLoaded) {
+      await _repository.delete(event.item.id);
+
       final items = (state as ListBlocLoaded).items;
 
       final index = items.indexWhere((x) => x.id == event.item.id);
-
       items.removeAt(index);
 
       _controller.add(ListBlocLoaded(items));

@@ -25,12 +25,7 @@ class _Controller<T extends Identifiable> extends InheritedWidget {
       state.widget.items.insert(index, item);
     });
 
-    state.widget.repository.move(item.id, newIndex).onError((_, __) {
-      state.setState(() {
-        state.widget.items.removeAt(index);
-        state.widget.items.insert(oldIndex, item);
-      });
-    });
+    state.widget.repository.move(item.id, newIndex);
   }
 
   // Delete
@@ -41,11 +36,7 @@ class _Controller<T extends Identifiable> extends InheritedWidget {
       state.widget.items.removeAt(index);
     });
 
-    state.widget.repository.delete(item.id).onError((_, __) {
-      state.setState(() {
-        state.widget.items.insert(index, item);
-      });
-    });
+    state.widget.repository.delete(item.id);
   }
 
   // Edit

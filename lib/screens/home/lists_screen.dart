@@ -14,7 +14,6 @@ class ListsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final repo = DI.of(context).listRepository;
     final bloc = DI.of(context).listBloc;
 
     bloc.onEvent(ListBlocGetAll());
@@ -37,7 +36,7 @@ class ListsScreen extends StatelessWidget {
           if (snapshot.data is ListBlocLoaded) {
             return ListScaffold(
               items: (snapshot.data as ListBlocLoaded).items,
-              repository: repo,
+              repository: DI.of(context).listRepository,
               formBuilder: (item) => ListsForm(item: item),
               itemBuilder: (item, index) => ListsTile(item: item),
             );
