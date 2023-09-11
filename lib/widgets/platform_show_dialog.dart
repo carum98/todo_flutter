@@ -10,7 +10,7 @@ Future<T?> platformShowDialog<T>({
   required BuildContext context,
   required Widget Function() builder,
 }) async {
-  if (Platform.isLinux) {
+  if (Platform.isLinux || Platform.isWeb) {
     return await showDialog(
       context: context,
       builder: (_) => Dialog(
