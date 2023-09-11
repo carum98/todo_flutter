@@ -127,7 +127,10 @@ class _ScaffoldPlatform extends StatelessWidget {
               icon: const Icon(Icons.add),
               label: const Text('Add List'),
             ),
-            pageBuilder: (_, index) => TodoScreen(listId: items[index].id),
+            pageBuilder: (_, index) => TodoScreen(
+              key: Key(items[index].id.toString()),
+              listId: items[index].id,
+            ),
           );
         },
       );
@@ -201,7 +204,10 @@ class _ScaffoldPlatform extends StatelessWidget {
           valueListenable: taskId,
           builder: (_, id, __) {
             if (id != null) {
-              return TodoScreen(listId: id);
+              return TodoScreen(
+                listId: id,
+                key: Key(id.toString()),
+              );
             }
 
             return Container();

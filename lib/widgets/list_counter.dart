@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_flutter/core/platform.dart';
 
 class ListCounter extends StatelessWidget {
   final int count;
@@ -17,7 +18,7 @@ class ListCounter extends StatelessWidget {
         color: Color.fromARGB(51, 0, 0, 0),
         shape: BoxShape.circle,
       ),
-      // padding: const EdgeInsets.only(bottom: 2),
+      padding: Platform.isWindows ? const EdgeInsets.only(bottom: 2) : null,
       child: Center(
         child: Text(
           count.toString(),
