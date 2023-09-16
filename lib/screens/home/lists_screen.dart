@@ -34,8 +34,16 @@ class ListsScreen extends StatelessWidget {
         stream: bloc.stream,
         builder: (_, snapshot) {
           if (snapshot.data is ListBlocLoaded) {
+            final items = (snapshot.data as ListBlocLoaded).items;
+
+            if (items.isEmpty) {
+              return const Center(
+                child: Text('No Lists found'),
+              );
+            }
+
             return ListScaffold(
-              items: (snapshot.data as ListBlocLoaded).items,
+              items: items,
               repository: DI.of(context).listRepository,
               formBuilder: (item) => ListsForm(item: item),
               itemBuilder: (item, index) => ListsTile(item: item),

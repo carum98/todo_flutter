@@ -62,8 +62,16 @@ class _TodoScreenState extends State<TodoScreen> {
         stream: bloc.stream,
         builder: (_, snapshot) {
           if (snapshot.data is TodoBlocLoaded) {
+            final items = (snapshot.data as TodoBlocLoaded).items;
+
+            if (items.isEmpty) {
+              return const Center(
+                child: Text('No ToDos found'),
+              );
+            }
+
             return ListScaffold(
-              items: (snapshot.data as TodoBlocLoaded).items,
+              items: items,
               repository: DI.of(context).todoRepository,
               reorderable: true,
               withDivider: true,
