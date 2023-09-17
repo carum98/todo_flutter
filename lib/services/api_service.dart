@@ -127,8 +127,8 @@ class ApiService {
   Uri _uri(String path) {
     return Uri(
       scheme: 'http',
-      host: '192.168.10.126',
-      port: 8080,
+      host: 'localhost',
+      port: 3000,
       path: path,
     );
   }
