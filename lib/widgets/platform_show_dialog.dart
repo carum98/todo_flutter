@@ -84,17 +84,17 @@ Future<T?> platformShowDialogAlert<T>({
         content: Text(content),
         actions: [
           fluent.Button(
-            child: Text(confirmTitle),
-            onPressed: () => Navigator.pop(context, true),
+            child: Text(cancelTitle),
+            onPressed: () => Navigator.pop(context, false),
           ),
           fluent.FilledButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => Navigator.pop(context, true),
             style: fluent.ButtonStyle(
               padding: fluent.ButtonState.all(
                 const EdgeInsets.symmetric(vertical: 6),
               ),
             ),
-            child: Text(cancelTitle),
+            child: Text(confirmTitle),
           ),
         ],
       ),

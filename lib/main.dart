@@ -59,6 +59,7 @@ class MyApp extends StatelessWidget {
     if (Platform.isWindows) {
       return FluentApp(
         title: 'ToDo App',
+        themeMode: ThemeMode.dark,
         theme: ThemeController.light as FluentThemeData,
         darkTheme: ThemeController.dark as FluentThemeData,
         initialRoute: isAuth ? HOME_PAGE : LOGIN_PAGE,
