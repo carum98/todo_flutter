@@ -19,9 +19,12 @@ class _Actions<T extends Identifiable> extends StatelessWidget {
     return Platform.isDesktop
         ? ContextMenu(
             child: child,
-            onDelete: () async => {
-              await controller?.deleteConfirmation(),
-              controller?.delete(item, index)
+            onDelete: () async {
+              final response = await controller?.deleteConfirmation();
+
+              if (response ?? false) {
+                controller?.delete(item, index);
+              }
             },
             onEdit: () => controller?.edit(item, index),
           )
