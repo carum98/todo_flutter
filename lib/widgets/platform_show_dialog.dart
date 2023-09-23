@@ -105,7 +105,7 @@ Future<T?> platformShowDialogAlert<T>({
     return showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => Dialog(
+      builder: (context) => Dialog(
         child: ConstrainedBox(
           constraints: const BoxConstraints(
             minWidth: 150,
