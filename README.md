@@ -1,16 +1,9 @@
-# todo_flutter
+# <img src="https://github.com/carum98/todo_flutter/assets/40967143/e5466720-24c5-4fcc-a70e-0d22dd658487" width="30" height="30" /> ToDo App
 
-A new Flutter project.
+ToDo App with Flutter to iOS, Android, Web, macOS, Windows and Linux.
 
-## Getting Started
+Backend: [ToDo API](https://github.com/carum98/todo-api)
 
-This project is a starting point for a Flutter application.
+![todo-app-flutter](https://github.com/carum98/todo_flutter/assets/40967143/f213c9f9-ed1a-46ad-95ed-d994d665aa9d)
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[Preview videos](https://www.youtube.com/playlist?list=PL21RtXQuYRMbt3RkPMSpBn9_0_7_LOCkU)
